@@ -23,6 +23,7 @@ class PreferenceDataStore @Inject constructor(
 
     private val currentNaviKey = stringPreferencesKey(CURRENT_NAVI)
     private val permissionKey = booleanPreferencesKey(IS_PERMISSION)
+    private val isDownloadAreaKey = booleanPreferencesKey(KEY_IS_DOWNLOAD_AREA)
 
     val currentNavi: Flow<String> = context.dataStore.data
         .catch { exception ->
@@ -54,13 +55,27 @@ class PreferenceDataStore @Inject constructor(
         }
     }
 
+    val isDownloadArea: Flow<Boolean> = context.dataStore.data
+        .map { preferences ->
+            preferences[isDownloadAreaKey] ?: false
+        }.catch {
+            emptyPreferences()
+        }
+
+    suspend fun setIsDownloadArea(isDownload: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[isDownloadAreaKey] = isDownload
+        }
+    }
+
     companion object {
         const val CURRENT_NAVI = "current_navi"
         const val IS_PERMISSION = "is_permission"
         const val SETTINGS = "settings"
+        const val KEY_IS_DOWNLOAD_AREA = "is_download_area"
 
         enum class NaviType {
-            KAKAOMAP , TMAP
+            KAKAOMAP, TMAP
         }
     }
 }

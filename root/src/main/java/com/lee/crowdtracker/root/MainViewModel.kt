@@ -3,7 +3,8 @@ package com.lee.crowdtracker.root
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lee.crowdtracker.core.domain.beach.usecase.GetBeachCongestionListUseCase
+import com.lee.crowdtracker.core.domain.beach.usecase.DownloadAreaByCsvUseCase
+import com.lee.crowdtracker.core.domain.beach.usecase.GetAreaListUseCase
 import com.lee.crowdtracker.library.base.exts.runSuspendCatching
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -11,17 +12,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val getBeachCongestionListUseCase: GetBeachCongestionListUseCase
+    private val downloadAreaByCsvUseCase: DownloadAreaByCsvUseCase,
+    private val getAreaListUseCase: GetAreaListUseCase,
 ) : ViewModel() {
-    fun fetchBeachCongestion() {
+    fun downloadArea() {
         viewModelScope.launch {
             runSuspendCatching {
-                getBeachCongestionListUseCase()
+                downloadAreaByCsvUseCase()
             }.onSuccess {
-                Log.d("TAG", "fetchBeachCongestion: $it")
+                Log.d("TAG", "downloadArea: success")
+                getAreaList()
             }.onFailure {
-                Log.d("TAG", "error" , it)
+                Log.d("TAG", "downloadArea: fail", it)
             }
+        }
+    }
+
+    suspend fun getAreaList() {
+        runSuspendCatching {
+            getAreaListUseCase()
+        }.onSuccess {
+            Log.d("TAG", "getAreaList: success => $it")
+        }.onFailure {
+            Log.d("TAG", "getAreaList: fail", it)
         }
     }
 }

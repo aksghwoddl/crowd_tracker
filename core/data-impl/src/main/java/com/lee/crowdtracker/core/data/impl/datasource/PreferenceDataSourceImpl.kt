@@ -23,4 +23,12 @@ class PreferenceDataSourceImpl @Inject constructor(
     override suspend fun setIsPermission(permission: Boolean) {
         dataStorePreference.setIsPermission(permission)
     }
+
+    override suspend fun getIsDownloadArea(): Flow<Boolean> {
+        return dataStorePreference.isDownloadArea
+    }
+
+    override suspend fun setIsDownloadArea(download: Boolean) {
+        dataStorePreference.setIsDownloadArea(isDownload = download)
+    }
 }

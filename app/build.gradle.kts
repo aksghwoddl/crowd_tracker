@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.lee.bb"
+    namespace = "com.lee.crowdtracker"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.lee.bb"
+        applicationId = "com.lee.crowdtracker"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
@@ -46,6 +46,7 @@ android {
 
 dependencies {
     implementation(project((":root")))
+    implementation(libs.compose.runtime)
     // Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

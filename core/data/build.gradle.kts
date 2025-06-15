@@ -1,6 +1,7 @@
 plugins {
     id("crowdtracker.android.library.convention")
     id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     alias(libs.plugins.hilt)
 }
 
@@ -38,4 +39,9 @@ dependencies {
 
     // Preferences DataStore
     implementation(libs.datastore.preferences)
+
+    // Room
+    ksp(libs.room.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
 }
