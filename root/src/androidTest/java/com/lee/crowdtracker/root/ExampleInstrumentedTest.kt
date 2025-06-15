@@ -1,4 +1,4 @@
-package com.lee.crowdtracker
+package com.lee.crowdtracker.root
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.lee.bb", appContext.packageName)
+        assertEquals("com.lee.crowdtracker.root.test", appContext.packageName)
     }
 }

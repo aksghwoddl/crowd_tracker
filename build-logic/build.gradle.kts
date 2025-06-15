@@ -11,7 +11,7 @@ dependencies {
 gradlePlugin {
     plugins {
         register("androidLibrary") {
-            id = "bb.android.library.convention"
+            id = "crowdtracker.android.library.convention"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
     }

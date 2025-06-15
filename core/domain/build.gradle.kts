@@ -1,5 +1,5 @@
 plugins {
-    id("bb.android.library.convention")
+    id("crowdtracker.android.library.convention")
     id("kotlin-kapt")
     alias(libs.plugins.hilt)
 }

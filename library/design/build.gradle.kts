@@ -1,5 +1,5 @@
 plugins {
-    id("bb.android.library.convention")
+    id("crowdtracker.android.library.convention")
     alias(libs.plugins.kotlin.compose)
 }
 

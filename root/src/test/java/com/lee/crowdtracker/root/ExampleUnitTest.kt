@@ -1,4 +1,4 @@
-package com.lee.crowdtracker
+package com.lee.crowdtracker.root
 
 import org.junit.Test
 
