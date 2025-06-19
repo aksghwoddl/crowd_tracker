@@ -1,7 +1,6 @@
 plugins {
     id("crowdtracker.android.library.convention")
-    id("kotlin-kapt")
-    alias(libs.plugins.hilt)
+    id("crowdtracker.android.hilt.library.convention")
 }
 
 android {
@@ -20,8 +19,4 @@ dependencies {
     implementation(libs.kotlinx.serialization.converter)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 }
