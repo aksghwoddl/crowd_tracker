@@ -1,7 +1,7 @@
 plugins {
     id("crowdtracker.android.library.convention")
     id("crowdtracker.android.hilt.library.convention")
-    alias(libs.plugins.kotlin.compose)
+    id("crowdtracker.android.compose.library.convention")
 }
 
 android {
@@ -22,14 +22,6 @@ dependencies {
     implementation(project(":core:presenter"))
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
-
-    // Compose
-    implementation(libs.activity.compose)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material3)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

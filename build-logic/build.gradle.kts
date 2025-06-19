@@ -18,7 +18,12 @@ gradlePlugin {
 
         register("androidHiltLibrary") {
             id = "crowdtracker.android.hilt.library.convention"
-            implementationClass = "AndroidHiltLibraryConvention"
+            implementationClass = "AndroidHiltLibraryConventionPlugin"
+        }
+
+        register("androidComposeLibrary") {
+            id = "crowdtracker.android.compose.library.convention"
+            implementationClass = "AndroidComposeLibraryConventionPlugin"
         }
     }
 }
