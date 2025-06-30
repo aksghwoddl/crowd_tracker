@@ -5,7 +5,7 @@ targetSdk = "35"
 
 # Kotlin & Compose
 kotlin = "2.1.10"
-compose-bom = "2025.06.00"
+compose-bom = "2025.06.01"
 
 # AndroidX Libraries
 core-ktx = "1.16.0"
@@ -17,27 +17,28 @@ junit = "4.13.2"
 androidx-junit = "1.2.1"
 espresso-core = "3.6.1"
 mockk = "1.13.8"
-robolectric = "4.11"
+robolectric = "4.14.1"
 turbine = "1.2.0"
 
 # Plugins
 android_application = "8.9.3"
 android_application_lib = "7.3.1"
 hilt = "2.55"
-ksp = "2.1.10-1.0.29"
+ksp = "2.1.10-1.0.31"
 
 #Libraries
 retrofit = "2.11.0"
-retrofit-gson = "2.9.0"
 okhttp3 = "4.12.0"
-gson = "2.11.0"
 coroutines = "1.10.2"
 datastore = "1.1.7"
 appcompat = "1.7.1"
 material = "1.12.0"
 kotlinx-serialization = "1.8.0"
 kotlinx-serialization-converter = "1.0.0"
-room = "2.7.1"
+room = "2.7.2"
+navigation = "2.9.0"
+uiTooling = "1.8.3"
+kotlin-immutable = "0.4.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android_application" }
@@ -53,13 +54,13 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 android-build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android_application" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-gradle-api = { module = "com.android.tools.build:gradle-api", version.ref = "android_application" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+kotlin-immutable = { group = 'org.jetbrains.kotlinx', name = 'kotlinx-collections-immutable', version.ref = "kotlin-immutable" }
 
 # Compose BOM & Components
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
-compose-runtime = {group = "androidx.compose.runtime" , name = "runtime"}
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime" }
 compose-ui = { group = "androidx.compose.ui", name = "ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
@@ -67,6 +68,7 @@ compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -110,6 +112,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 [bundles]
 unit-test = [

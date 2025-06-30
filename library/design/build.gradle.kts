@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lee.bb.libray.design"
+    namespace = "com.lee.crowdtracker.libray.design"
     compileSdk = 35
 }
 
