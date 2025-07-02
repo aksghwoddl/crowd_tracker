@@ -5,7 +5,6 @@ plugins {
 
 android {
     namespace = "com.lee.crowdtracker.libray.design"
-    compileSdk = 35
 }
 
 dependencies {

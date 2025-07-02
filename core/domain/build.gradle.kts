@@ -4,15 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lee.bb.domain"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
+    namespace = "com.lee.crowdtracker.domain"
 }
 
 dependencies {

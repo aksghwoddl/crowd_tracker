@@ -5,13 +5,6 @@ plugins {
 
 android {
     namespace = "com.lee.bb.base"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 24
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
 }
 
 dependencies {
