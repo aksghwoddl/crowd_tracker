@@ -12,7 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.lee.crowdtracker.libray.design.theme.BBTheme
+import com.lee.crowdtracker.libray.design.theme.CDTheme
+import com.lee.crowdtracker.root.ui.CrowdTrackerApp
+import com.lee.crowdtracker.root.ui.rememberCrowdTrackerAppState
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,11 +25,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BBTheme {
+            val appState = rememberCrowdTrackerAppState()
+            CDTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
+                    CrowdTrackerApp(
+                        modifier = Modifier.padding(innerPadding),
+                        appState = appState
                     )
                 }
             }
@@ -51,7 +54,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    BBTheme {
+    CDTheme {
         Greeting("Android")
     }
 }

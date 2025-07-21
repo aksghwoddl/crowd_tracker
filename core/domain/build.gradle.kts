@@ -1,19 +1,10 @@
 plugins {
     id("crowdtracker.android.library.convention")
-    id("kotlin-kapt")
-    alias(libs.plugins.hilt)
+    id("crowdtracker.android.hilt.library.convention")
 }
 
 android {
-    namespace = "com.lee.bb.domain"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 24
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
+    namespace = "com.lee.crowdtracker.domain"
 }
 
 dependencies {
@@ -22,8 +13,4 @@ dependencies {
 
     // Test
     testImplementation(project(":library:test"))
-
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 }

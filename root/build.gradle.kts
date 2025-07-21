@@ -1,19 +1,11 @@
 plugins {
     id("crowdtracker.android.library.convention")
-    alias(libs.plugins.kotlin.compose)
-    id("kotlin-kapt")
-    alias(libs.plugins.hilt)
+    id("crowdtracker.android.hilt.library.convention")
+    id("crowdtracker.android.compose.library.convention")
 }
 
 android {
     namespace = "com.lee.crowdtracker.root"
-    compileSdk = 35
-
-    defaultConfig {
-        minSdk = 24
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
 }
 
 dependencies {
@@ -23,18 +15,6 @@ dependencies {
     implementation(project(":core:presenter"))
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
-
-    // Compose
-    implementation(libs.activity.compose)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material3)
-
-    // Hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

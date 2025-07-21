@@ -1,11 +1,10 @@
 plugins {
     id("crowdtracker.android.library.convention")
-    alias(libs.plugins.kotlin.compose)
+    id("crowdtracker.android.compose.library.convention")
 }
 
 android {
-    namespace = "com.lee.bb.libray.design"
-    compileSdk = 35
+    namespace = "com.lee.crowdtracker.libray.design"
 }
 
 dependencies {
@@ -15,11 +14,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.espresso.core)
-
-    implementation(libs.activity.compose)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material3)
 }
