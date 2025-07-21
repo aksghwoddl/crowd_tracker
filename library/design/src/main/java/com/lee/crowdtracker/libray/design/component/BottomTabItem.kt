@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import com.lee.crowdtracker.libray.design.theme.CDTheme
 
 @Composable
 internal fun BottomTabItem(
+    isSelected: Boolean,
     icon: ImageVector,
     label: String,
     onClick: () -> Unit,
@@ -32,6 +34,7 @@ internal fun BottomTabItem(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
+            tint = if(isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary,
             imageVector = icon,
             contentDescription = ""
         )
@@ -54,7 +57,8 @@ private fun BottomTabItemPreview() {
         BottomTabItem(
             icon = Icons.Default.Home,
             label = "홈",
-            onClick = {}
+            onClick = {},
+            isSelected = false
         )
     }
 }

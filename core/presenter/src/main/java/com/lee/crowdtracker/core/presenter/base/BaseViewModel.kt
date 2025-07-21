@@ -1,8 +1,6 @@
-package com.lee.bb.core.presenter.base
+package com.lee.crowdtracker.core.presenter.base
 
 import androidx.lifecycle.ViewModel
-import com.example.mvisampleapp.ui.base.BaseEvent
-import com.example.mvisampleapp.ui.base.BaseState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

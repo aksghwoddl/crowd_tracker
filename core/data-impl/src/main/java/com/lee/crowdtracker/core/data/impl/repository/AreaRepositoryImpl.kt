@@ -53,6 +53,10 @@ class AreaRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun getAreaListFromName(name: String): List<CsvDownloadEntity> {
+        return csvDownloadDao.getAreaByName(name = name)
+    }
+
     override suspend fun getDownloadedAreaList() = withContext(Dispatchers.IO) {
         csvDownloadDao.getAreaList()
     }

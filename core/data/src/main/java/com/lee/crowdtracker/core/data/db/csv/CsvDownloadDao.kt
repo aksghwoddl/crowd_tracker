@@ -14,5 +14,5 @@ interface CsvDownloadDao {
     suspend fun getAreaList(): List<CsvDownloadEntity>
 
     @Query("SELECT * FROM csv_download_area WHERE name = :name OR englishName = :name")
-    suspend fun getAreaByName(name: String): CsvDownloadEntity?
+    suspend fun getAreaByName(name: String): List<CsvDownloadEntity>
 }

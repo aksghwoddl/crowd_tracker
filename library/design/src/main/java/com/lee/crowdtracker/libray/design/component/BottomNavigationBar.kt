@@ -3,6 +3,10 @@ package com.lee.crowdtracker.libray.design.component
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.lee.crowdtracker.libray.design.navigation.TopLevelDestination
@@ -15,6 +19,8 @@ fun BottomNavigationBar(
     onNavItem: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var currentSelectedItem by remember { mutableStateOf<TopLevelDestination>(TopLevelDestination.Home) }
+
     Row(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -25,7 +31,9 @@ fun BottomNavigationBar(
                 icon = it.icon,
                 onClick = {
                     onNavItem(it)
-                }
+                    currentSelectedItem = it
+                },
+                isSelected = currentSelectedItem.label == it.label
             )
         }
     }

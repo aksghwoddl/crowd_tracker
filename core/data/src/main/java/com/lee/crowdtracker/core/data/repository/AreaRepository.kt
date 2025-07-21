@@ -13,5 +13,7 @@ interface AreaRepository {
         englishName: String
     )
 
+    suspend fun getAreaListFromName(name: String): List<CsvDownloadEntity>
+
     suspend fun getDownloadedAreaList() : List<CsvDownloadEntity>
 }

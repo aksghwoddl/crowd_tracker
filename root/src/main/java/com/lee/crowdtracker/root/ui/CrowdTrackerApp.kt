@@ -11,6 +11,7 @@ import com.lee.crowdtracker.core.presenter.screen.CrowdTrackerScreen
 import com.lee.crowdtracker.libray.design.component.BottomNavigationBar
 import com.lee.crowdtracker.libray.design.navigation.TopLevelDestination
 import com.lee.crowdtracker.root.Greeting
+import com.lee.crowdtracker.search.SearchRoute
 
 @Composable
 internal fun CrowdTrackerApp(
@@ -34,7 +35,7 @@ internal fun CrowdTrackerApp(
             startDestination = CrowdTrackerScreen.HomeRoute.route,
         ) {
             composable(CrowdTrackerScreen.SearchRoute.route) {
-                Greeting(name = CrowdTrackerScreen.SearchRoute.route)
+                SearchRoute()
             }
             composable(CrowdTrackerScreen.HomeRoute.route) {
                 Greeting(name = CrowdTrackerScreen.HomeRoute.route)

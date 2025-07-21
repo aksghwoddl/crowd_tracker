@@ -6,7 +6,6 @@ plugins {
 
 android {
     namespace = "com.lee.crowdtracker.search"
-    compileSdk = 35
 }
 
 dependencies {
