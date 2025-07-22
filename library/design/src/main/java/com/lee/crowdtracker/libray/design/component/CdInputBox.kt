@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
@@ -23,13 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,18 +42,23 @@ import com.lee.crowdtracker.libray.design.theme.CDTheme
 fun CdInputBox(
     text: String,
     onTextChange: (String) -> Unit,
+    placeholder: String,
     modifier: Modifier = Modifier,
     isShowTrailingIcon: Boolean = false,
     trailingIcon: ImageVector? = null,
     trailingIconDescription: String = "",
     onTrailingIconClick: () -> Unit = {},
-    placeholder: String = "지역명을 입력하세요."
+    keyboardOptions: KeyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.Text,
+        imeAction = ImeAction.Default
+    ),
+    keyboardActions: KeyboardActions = KeyboardActions(
+        onDone = {}
+    )
 ) {
-    val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
-
     val borderColor by animateColorAsState(
-        if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiaryContainer
+        if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
     )
 
     Box(
@@ -77,7 +85,9 @@ fun CdInputBox(
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             ),
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.tertiaryContainer),
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.secondaryContainer),
             decorationBox = { innerTextField ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -108,7 +118,7 @@ fun CdInputBox(
                                 Icon(
                                     imageVector = icon,
                                     contentDescription = trailingIconDescription,
-                                    tint = if (text.isEmpty()) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.primary
+                                    tint = if (text.isEmpty()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                                 )
                             }
                         }
@@ -125,9 +135,17 @@ private fun CdInputBoxPreview() {
     CDTheme {
         CdInputBox(
             text = "",
-            onTextChange = {},
+            placeholder = "검색어를 입력하세요",
             isShowTrailingIcon = true,
-            trailingIcon = Icons.Default.Search
+            trailingIcon = Icons.Default.Search,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {}
+            ),
+            onTextChange = {},
         )
     }
 }

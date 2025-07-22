@@ -1,4 +1,4 @@
-package com.lee.crowdtracker.root
+package com.lee.crowdtracker
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

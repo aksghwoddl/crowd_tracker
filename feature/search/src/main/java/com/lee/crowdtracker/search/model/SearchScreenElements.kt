@@ -14,13 +14,17 @@ data class SearchScreenState(
 
 sealed interface SearchScreenEvent : BaseEvent {
     data class OnChangeSearchText(val text: String) : SearchScreenEvent
-    data object OnSearchButtonClick : SearchScreenEvent
     data class OnSearchAreaSuccess(val areaList: PersistentList<Area>) : SearchScreenEvent
+    data object OnKeyboardActionSearch : SearchScreenEvent
+    data class OnClickArea(val area: Area) : SearchScreenEvent
 }
 
 @Immutable
 sealed interface SearchScreenEffect {
-
+    data class ShowSnackBar(
+        val message: String,
+        val actionLabel: String?,
+    ) : SearchScreenEffect
 }
 
 @Immutable

@@ -8,8 +8,10 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.lee.crowdtracker.libray.design.theme.CDTheme
@@ -25,11 +27,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val appState = rememberCrowdTrackerAppState()
+            val snackbarHostState = remember { SnackbarHostState() }
+            val appState = rememberCrowdTrackerAppState(
+                snackbarHostState = snackbarHostState
+            )
             CDTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     CrowdTrackerApp(
                         modifier = Modifier.padding(innerPadding),
+                        snackbarHostState = snackbarHostState,
                         appState = appState
                     )
                 }
