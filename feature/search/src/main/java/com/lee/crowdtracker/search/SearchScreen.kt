@@ -95,7 +95,10 @@ internal fun SearchScreen(
         )
         AreaList(
             areas = state.areaList.toPersistentList(),
-            onClickItem = onClickArea
+            onClickItem = {
+                onClickArea(it)
+                keyboardController?.hide()
+            }
         )
     }
 }

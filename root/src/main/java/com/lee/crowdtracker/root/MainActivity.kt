@@ -32,7 +32,10 @@ class MainActivity : ComponentActivity() {
                 snackbarHostState = snackbarHostState
             )
             CDTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) { innerPadding ->
                     CrowdTrackerApp(
                         modifier = Modifier.padding(innerPadding),
                         snackbarHostState = snackbarHostState,
