@@ -8,6 +8,8 @@ import com.lee.crowdtracker.library.test.base.BaseTest
 import com.lee.crowdtracker.library.test.utils.shouldBe
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -27,18 +29,20 @@ class GetAreaListByNameUseCaseTest : BaseTest() {
     fun `UseCase 반환값 테스트`() = runTest {
         coEvery {
             areaRepository.getAreaListFromName(name = any())
-        } returns listOf(
-            CsvDownloadEntity(
-                areaId = "",
-                category = "관광특구",
-                no = 7,
-                name = "홍대입구",
-                englishName = "Hongdae"
+        } returns flowOf(
+            listOf(
+                CsvDownloadEntity(
+                    areaId = "",
+                    category = "관광특구",
+                    no = 7,
+                    name = "홍대입구",
+                    englishName = "Hongdae"
+                )
             )
         )
 
         with(useCase(name = "name")) {
-            this shouldBe listOf(
+            this.first() shouldBe listOf(
                 Area(
                     no = 7,
                     name = "홍대입구",

@@ -1,100 +1,56 @@
 package com.lee.crowdtracker.search
 
+import android.util.Log
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lee.crowdtracker.core.domain.beach.usecase.GetAreaListByNameUseCase
-import com.lee.crowdtracker.core.presenter.base.BaseViewModel
-import com.lee.crowdtracker.library.base.exts.runSuspendCatching
-import com.lee.crowdtracker.search.model.SearchScreenEffect
-import com.lee.crowdtracker.search.model.SearchScreenEvent
-import com.lee.crowdtracker.search.model.SearchScreenSideEffect
-import com.lee.crowdtracker.search.model.SearchScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+
+private const val TAG = "SearchViewModel"
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val getAreaListByNameUseCase: GetAreaListByNameUseCase,
-) : BaseViewModel<SearchScreenState, SearchScreenEvent>(
-    initialState = SearchScreenState()
-) {
-    private val _effect: MutableSharedFlow<SearchScreenEffect> = MutableSharedFlow()
-    val effect: SharedFlow<SearchScreenEffect> = _effect.asSharedFlow()
+) : ViewModel() {
+    private val _searchQuery = MutableStateFlow<String>("")
 
-    private var textChangeDebounceJob: Job? = null
+    fun onQueryChange(query: String) {
+        _searchQuery.update { query }
+    }
 
-    override fun handleEvent(event: SearchScreenEvent) {
-        when (event) {
-            is SearchScreenEvent.OnChangeSearchText -> {
-                updateState {
-                    it.copy(
-                        searchText = event.text
-                    )
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    val searchUiState: StateFlow<SearchUiState> = _searchQuery
+        .debounce(300)
+        .filter { it.isNotBlank() }
+        .distinctUntilChanged()
+        .flatMapLatest {
+            getAreaListByNameUseCase(name = it).map { areaList ->
+                if (it.isEmpty()) {
+                    SearchUiState.Empty
+                } else {
+                    SearchUiState.Success(areaList = areaList)
                 }
-                textChangeDebounceJob?.cancel()
-                textChangeDebounceJob = viewModelScope.launch {
-                    delay(500)
-                    handleSideEffect(sideEffect = SearchScreenSideEffect.SearchArea(text = state.value.searchText))
-                }
-            }
-
-            is SearchScreenEvent.OnSearchAreaSuccess -> {
-                updateState {
-                    it.copy(
-                        areaList = event.areaList
-                    )
-                }
-            }
-
-            SearchScreenEvent.OnKeyboardActionSearch -> {
-                handleSideEffect(sideEffect = SearchScreenSideEffect.SearchArea(text = state.value.searchText))
-            }
-
-            is SearchScreenEvent.OnClickArea -> {
-                emitEffect(
-                    SearchScreenEffect.ShowSnackBar(
-                        message = "${event.area.name} 클릭",
-                        actionLabel = null
-                    )
-                )
+            }.catch { throwable ->
+                Log.e(TAG, "${throwable.message.toString()}")
+                emit(SearchUiState.Error("문제가 발생 했습니다."))
             }
         }
-    }
-
-    private fun handleSideEffect(sideEffect: SearchScreenSideEffect) {
-        when (sideEffect) {
-            is SearchScreenSideEffect.SearchArea -> {
-                searchAreaListByName(text = sideEffect.text)
-            }
-        }
-    }
-
-    private fun emitEffect(effect: SearchScreenEffect) {
-        viewModelScope.launch {
-            _effect.emit(effect)
-        }
-    }
-
-    private fun searchAreaListByName(text: String) {
-        viewModelScope.launch {
-            runSuspendCatching {
-                getAreaListByNameUseCase(name = text)
-            }.onSuccess {
-                handleEvent(SearchScreenEvent.OnSearchAreaSuccess(areaList = it.toPersistentList()))
-            }.onFailure {
-                emitEffect(
-                    SearchScreenEffect.ShowSnackBar(
-                        message = "문제가 발생 했습니다.",
-                        actionLabel = null,
-                    )
-                )
-            }
-        }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000),
+            initialValue = SearchUiState.Loading
+        )
 }

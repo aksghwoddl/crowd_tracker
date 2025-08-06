@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CsvDownloadDao {
@@ -14,5 +15,5 @@ interface CsvDownloadDao {
     suspend fun getAreaList(): List<CsvDownloadEntity>
 
     @Query("SELECT * FROM csv_download_area WHERE name LIKE '%' || :name || '%' OR englishName LIKE '%' || :name || '%'")
-    suspend fun getAreaByName(name: String): List<CsvDownloadEntity>
+    fun getAreaByName(name: String): Flow<List<CsvDownloadEntity>>
 }
