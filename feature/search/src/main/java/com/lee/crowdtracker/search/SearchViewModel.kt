@@ -38,13 +38,14 @@ class SearchViewModel @Inject constructor(
         .distinctUntilChanged()
         .flatMapLatest {
             getAreaListByNameUseCase(name = it).map { areaList ->
-                if (it.isEmpty()) {
+                Log.d(TAG ,"결과값은 $areaList")
+                if (areaList.isEmpty()) {
                     SearchUiState.Empty
                 } else {
                     SearchUiState.Success(areaList = areaList)
                 }
             }.catch { throwable ->
-                Log.e(TAG, "${throwable.message.toString()}")
+                Log.e(TAG, throwable.message.toString())
                 emit(SearchUiState.Error("문제가 발생 했습니다."))
             }
         }
