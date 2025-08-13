@@ -18,7 +18,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,29 +40,25 @@ import com.lee.crowdtracker.core.domain.beach.model.AreaModel
 import com.lee.crowdtracker.libray.design.component.CdInputBox
 import com.lee.crowdtracker.libray.design.theme.CDTheme
 import com.lee.crowdtracker.search.component.AreaList
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.launch
+
+private const val TAG = "SearchRoute"
 
 @Composable
 fun SearchRoute(
     onShowSnackBar: suspend (String, String?) -> Unit,
     viewModel: SearchViewModel = hiltViewModel()
 ) {
-    val state by viewModel.searchUiState.collectAsStateWithLifecycle()
+    val searchUiState by viewModel.searchUiState.collectAsStateWithLifecycle()
+    val cityDataUiState by viewModel.cityDataUiState.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
 
     SearchScreen(
-        state = state,
-        onTextChange = {
-            viewModel.onQueryChange(it)
-        },
-        onClickArea = {
-            scope.launch {
-                onShowSnackBar("${it.name}클릭", "")
-            }
-        },
+        searchUiState = searchUiState,
+        cityDataUiState = cityDataUiState,
+        onTextChange = viewModel::onQueryChange,
+        onClickArea = viewModel::onAreaClick,
     )
 }
 
@@ -71,7 +66,8 @@ fun SearchRoute(
 internal fun SearchScreen(
     onTextChange: (String) -> Unit,
     onClickArea: (AreaModel) -> Unit,
-    state: SearchUiState,
+    searchUiState: SearchUiState,
+    cityDataUiState: CityDataUiState,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val inputBoxFocusRequester = remember { FocusRequester() }
@@ -103,11 +99,7 @@ internal fun SearchScreen(
             ),
         )
 
-        SideEffect {
-            Log.d("TAG" , "state = $state")
-        }
-
-        when (state) {
+        when (searchUiState) {
             SearchUiState.Loading -> {
                 SearchLoading()
             }
@@ -122,7 +114,7 @@ internal fun SearchScreen(
 
             is SearchUiState.Success -> {
                 AreaList(
-                    areaModels = state.areaModelList.toPersistentList(),
+                    areaModels = searchUiState.areaModelList.toPersistentList(),
                     onClickItem = {
                         onClickArea(it)
                         keyboardController?.hide()
@@ -160,16 +152,6 @@ private fun EmptyResult(
         buttonText = "다시 검색",
         onButtonClick = onRetryButtonClick
     )
-}
-
-@Composable
-private fun SearchResult(
-    searchQuery: String,
-    onTextChange: (String) -> Unit,
-    onClickArea: (AreaModel) -> Unit,
-    onKeyboardAction: () -> Unit,
-    result: PersistentList<AreaModel>
-) {
 }
 
 @Composable
@@ -228,7 +210,7 @@ private fun PlaceholderScreen(
 private fun SearchResultScreenPreview() {
     CDTheme {
         SearchScreen(
-            state = SearchUiState.Success(
+            searchUiState = SearchUiState.Success(
                 areaModelList = persistentListOf(
                     AreaModel(
                         no = 7,
@@ -242,6 +224,7 @@ private fun SearchResultScreenPreview() {
                     ),
                 )
             ),
+            cityDataUiState = CityDataUiState.Loading,
             onTextChange = {},
             onClickArea = {},
         )
@@ -255,7 +238,8 @@ private fun SearchResultScreenPreview() {
 private fun SearchLoadingScreenPreview() {
     CDTheme {
         SearchScreen(
-            state = SearchUiState.Loading,
+            searchUiState = SearchUiState.Loading,
+            cityDataUiState = CityDataUiState.Loading,
             onTextChange = {},
             onClickArea = {},
         )
@@ -269,7 +253,8 @@ private fun SearchLoadingScreenPreview() {
 private fun SearchEmptyScreenPreview() {
     CDTheme {
         SearchScreen(
-            state = SearchUiState.Empty,
+            searchUiState = SearchUiState.Empty,
+            cityDataUiState = CityDataUiState.Loading,
             onTextChange = {},
             onClickArea = {},
         )
