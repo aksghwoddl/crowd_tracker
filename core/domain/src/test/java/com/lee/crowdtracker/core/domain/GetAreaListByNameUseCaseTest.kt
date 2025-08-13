@@ -2,8 +2,8 @@ package com.lee.crowdtracker.core.domain
 
 import com.lee.crowdtracker.core.data.db.csv.CsvDownloadEntity
 import com.lee.crowdtracker.core.data.repository.AreaRepository
-import com.lee.crowdtracker.core.domain.beach.model.Area
-import com.lee.crowdtracker.core.domain.beach.usecase.GetAreaListByNameUseCase
+import com.lee.crowdtracker.core.domain.beach.model.AreaModel
+import com.lee.crowdtracker.core.domain.beach.usecase.area.GetAreaListByNameUseCase
 import com.lee.crowdtracker.library.test.base.BaseTest
 import com.lee.crowdtracker.library.test.utils.shouldBe
 import io.mockk.coEvery
@@ -43,7 +43,7 @@ class GetAreaListByNameUseCaseTest : BaseTest() {
 
         with(useCase(name = "name")) {
             this.first() shouldBe listOf(
-                Area(
+                AreaModel(
                     no = 7,
                     name = "홍대입구",
                     category = "관광특구",

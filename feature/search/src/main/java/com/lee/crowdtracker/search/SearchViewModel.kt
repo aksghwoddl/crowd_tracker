@@ -3,7 +3,7 @@ package com.lee.crowdtracker.search
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lee.crowdtracker.core.domain.beach.usecase.GetAreaListByNameUseCase
+import com.lee.crowdtracker.core.domain.beach.usecase.area.GetAreaListByNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -25,7 +25,7 @@ private const val TAG = "SearchViewModel"
 class SearchViewModel @Inject constructor(
     private val getAreaListByNameUseCase: GetAreaListByNameUseCase,
 ) : ViewModel() {
-    private val _searchQuery = MutableStateFlow<String>("")
+    private val _searchQuery = MutableStateFlow("")
 
     fun onQueryChange(query: String) {
         _searchQuery.update { query }
@@ -42,7 +42,7 @@ class SearchViewModel @Inject constructor(
                 if (areaList.isEmpty()) {
                     SearchUiState.Empty
                 } else {
-                    SearchUiState.Success(areaList = areaList)
+                    SearchUiState.Success(areaModelList = areaList)
                 }
             }.catch { throwable ->
                 Log.e(TAG, throwable.message.toString())

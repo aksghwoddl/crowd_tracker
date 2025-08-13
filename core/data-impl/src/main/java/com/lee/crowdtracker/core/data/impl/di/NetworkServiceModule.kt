@@ -1,7 +1,7 @@
 package com.lee.crowdtracker.core.data.impl.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.lee.crowdtracker.core.data.impl.service.BeachApiService
+import com.lee.crowdtracker.core.data.impl.service.SeoulOpenApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,19 +19,16 @@ import javax.inject.Singleton
 object NetworkServiceModule {
     @Provides
     @Singleton
-    fun provideBeachApiService(
+    fun provideSeoulOpenApiService(
         okHttpClient: OkHttpClient,
         json: Json,
-    ): BeachApiService = Retrofit.Builder()
-        .baseUrl("https://www.tournmaster.com")
+    ) = Retrofit.Builder()
+        .baseUrl("http://openapi.seoul.go.kr:8088/")
         .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .build()
-        .create(BeachApiService::class.java)
+        .create(SeoulOpenApiService::class.java)
 
-    /**
-     * OkHttpClient를 provide하는 함수
-     * **/
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {

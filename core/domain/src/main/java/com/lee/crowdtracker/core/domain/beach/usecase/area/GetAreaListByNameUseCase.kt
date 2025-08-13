@@ -1,4 +1,4 @@
-package com.lee.crowdtracker.core.domain.beach.usecase
+package com.lee.crowdtracker.core.domain.beach.usecase.area
 
 import com.lee.crowdtracker.core.data.db.csv.CsvDownloadEntity
 import com.lee.crowdtracker.core.data.repository.AreaRepository

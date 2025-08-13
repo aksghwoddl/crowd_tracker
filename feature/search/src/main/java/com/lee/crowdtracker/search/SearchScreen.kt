@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.lee.crowdtracker.core.domain.beach.model.Area
+import com.lee.crowdtracker.core.domain.beach.model.AreaModel
 import com.lee.crowdtracker.libray.design.component.CdInputBox
 import com.lee.crowdtracker.libray.design.theme.CDTheme
 import com.lee.crowdtracker.search.component.AreaList
@@ -70,7 +70,7 @@ fun SearchRoute(
 @Composable
 internal fun SearchScreen(
     onTextChange: (String) -> Unit,
-    onClickArea: (Area) -> Unit,
+    onClickArea: (AreaModel) -> Unit,
     state: SearchUiState,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -122,7 +122,7 @@ internal fun SearchScreen(
 
             is SearchUiState.Success -> {
                 AreaList(
-                    areas = state.areaList.toPersistentList(),
+                    areaModels = state.areaModelList.toPersistentList(),
                     onClickItem = {
                         onClickArea(it)
                         keyboardController?.hide()
@@ -166,9 +166,9 @@ private fun EmptyResult(
 private fun SearchResult(
     searchQuery: String,
     onTextChange: (String) -> Unit,
-    onClickArea: (Area) -> Unit,
+    onClickArea: (AreaModel) -> Unit,
     onKeyboardAction: () -> Unit,
-    result: PersistentList<Area>
+    result: PersistentList<AreaModel>
 ) {
 }
 
@@ -229,13 +229,13 @@ private fun SearchResultScreenPreview() {
     CDTheme {
         SearchScreen(
             state = SearchUiState.Success(
-                areaList = persistentListOf(
-                    Area(
+                areaModelList = persistentListOf(
+                    AreaModel(
                         no = 7,
                         name = "홍대 관광특구",
                         category = "관광특구",
                     ),
-                    Area(
+                    AreaModel(
                         no = 53,
                         name = "홍대입구역(2호선)",
                         category = "인구밀집지역",

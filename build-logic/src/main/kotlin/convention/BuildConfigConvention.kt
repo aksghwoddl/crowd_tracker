@@ -9,9 +9,19 @@ fun Project.buildConfigConfiguration(
     buildTypes {
         getByName("release") {
             buildConfigField("boolean", "APP_DEBUG", false.toString())
+            buildConfigField(
+                "String",
+                "SEOUL_OPEN_API_KEY",
+                project.findProperty("seoul_openapi_key").toString()
+            )
         }
         getByName("debug") {
             buildConfigField("boolean", "APP_DEBUG", true.toString())
+            buildConfigField(
+                "String",
+                "SEOUL_OPEN_API_KEY",
+                project.findProperty("seoul_openapi_key").toString()
+            )
         }
     }
 }
