@@ -3,6 +3,7 @@ package convention
 import com.android.build.api.dsl.CommonExtension
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.add
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.getByType
 
@@ -24,6 +25,7 @@ fun Project.composeConfiguration(
         add("debugImplementation", libs.findLibrary("compose.ui.tooling.preview").get())
         add("implementation", libs.findLibrary("compose.material3").get())
         add("implementation", libs.findLibrary("compose.navigation").get())
+        add("implementation" , libs.findLibrary("hilt.navigation.compose").get())
         add("implementation", platform(libs.findLibrary("compose.bom").get()))
         add("implementation" , libs.findLibrary("kotlin.immutable").get())
     }

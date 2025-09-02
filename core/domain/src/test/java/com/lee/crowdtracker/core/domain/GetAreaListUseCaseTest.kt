@@ -2,7 +2,7 @@ package com.lee.crowdtracker.core.domain
 
 import com.lee.crowdtracker.core.data.db.csv.CsvDownloadEntity
 import com.lee.crowdtracker.core.data.repository.AreaRepository
-import com.lee.crowdtracker.core.domain.beach.usecase.GetAreaListUseCase
+import com.lee.crowdtracker.core.domain.beach.usecase.area.GetAreaListUseCase
 import com.lee.crowdtracker.library.test.base.BaseTest
 import com.lee.crowdtracker.library.test.utils.shouldBe
 import io.mockk.coEvery

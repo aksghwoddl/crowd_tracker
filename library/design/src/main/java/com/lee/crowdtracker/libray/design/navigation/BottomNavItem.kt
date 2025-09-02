@@ -3,9 +3,11 @@ package com.lee.crowdtracker.libray.design.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.collections.immutable.persistentListOf
 
+@Stable
 sealed class TopLevelDestination(
     val label: String,
     val icon: ImageVector,
@@ -17,10 +19,10 @@ sealed class TopLevelDestination(
 
     data object Search : TopLevelDestination(
         label = "검색",
-        icon = Icons.Default.Search
+        icon = Icons.Default.Search,
     )
 
     companion object {
-        val items = persistentListOf(Home , Search)
+        val items = persistentListOf(Home, Search)
     }
 }

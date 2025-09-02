@@ -13,6 +13,8 @@ dependencies {
     implementation(project(":library:base"))
     implementation(project(":core:domain"))
     implementation(project(":core:presenter"))
+    implementation(project(":feature:search"))
+
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
 

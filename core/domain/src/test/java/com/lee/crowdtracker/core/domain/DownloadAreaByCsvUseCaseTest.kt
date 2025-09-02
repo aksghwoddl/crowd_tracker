@@ -3,7 +3,7 @@ package com.lee.crowdtracker.core.domain
 import com.lee.crowdtracker.core.data.datastore.PreferenceDataStore
 import com.lee.crowdtracker.core.data.dto.AreaDto
 import com.lee.crowdtracker.core.data.repository.AreaRepository
-import com.lee.crowdtracker.core.domain.beach.usecase.DownloadAreaByCsvUseCase
+import com.lee.crowdtracker.core.domain.beach.usecase.area.DownloadAreaByCsvUseCase
 import com.lee.crowdtracker.library.test.base.BaseTest
 import io.mockk.coEvery
 import io.mockk.coVerify

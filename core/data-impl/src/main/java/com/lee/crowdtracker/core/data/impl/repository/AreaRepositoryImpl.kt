@@ -7,6 +7,7 @@ import com.lee.crowdtracker.core.data.dto.AreaDto
 import com.lee.crowdtracker.core.data.repository.AreaRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -51,6 +52,10 @@ class AreaRepositoryImpl @Inject constructor(
                 englishName = englishName
             )
         )
+    }
+
+    override fun getAreaListFromName(name: String): Flow<List<CsvDownloadEntity>> {
+        return csvDownloadDao.getAreaByName(name = name)
     }
 
     override suspend fun getDownloadedAreaList() = withContext(Dispatchers.IO) {
