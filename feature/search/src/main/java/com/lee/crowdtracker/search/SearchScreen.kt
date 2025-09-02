@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,6 +39,7 @@ import com.lee.crowdtracker.core.domain.beach.model.AreaModel
 import com.lee.crowdtracker.libray.design.component.CdInputBox
 import com.lee.crowdtracker.libray.design.theme.CDTheme
 import com.lee.crowdtracker.search.component.AreaList
+import com.lee.crowdtracker.search.component.CityContentsDialog
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
@@ -52,13 +52,13 @@ fun SearchRoute(
 ) {
     val searchUiState by viewModel.searchUiState.collectAsStateWithLifecycle()
     val cityDataUiState by viewModel.cityDataUiState.collectAsStateWithLifecycle()
-    val scope = rememberCoroutineScope()
 
     SearchScreen(
         searchUiState = searchUiState,
         cityDataUiState = cityDataUiState,
         onTextChange = viewModel::onQueryChange,
         onClickArea = viewModel::onAreaClick,
+        onDialogDismiss = viewModel::onCityContentsDialogDismiss
     )
 }
 
@@ -66,19 +66,35 @@ fun SearchRoute(
 internal fun SearchScreen(
     onTextChange: (String) -> Unit,
     onClickArea: (AreaModel) -> Unit,
+    onDialogDismiss: () -> Unit,
     searchUiState: SearchUiState,
     cityDataUiState: CityDataUiState,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val inputBoxFocusRequester = remember { FocusRequester() }
     var searchText by rememberSaveable { mutableStateOf("") }
+
+    when (cityDataUiState) {
+        is CityDataUiState.Success -> {
+            CityContentsDialog(
+                name = cityDataUiState.name,
+                level = cityDataUiState.level,
+                message = cityDataUiState.message,
+                onDismiss = onDialogDismiss
+            )
+        }
+
+        CityDataUiState.Loading -> {}
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         CdInputBox(
             modifier = Modifier
                 .focusRequester(inputBoxFocusRequester)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
             text = searchText,
             placeholder = "검색어를 입력하세요.",
             isShowTrailingIcon = true,
@@ -227,6 +243,7 @@ private fun SearchResultScreenPreview() {
             cityDataUiState = CityDataUiState.Loading,
             onTextChange = {},
             onClickArea = {},
+            onDialogDismiss = {}
         )
     }
 }
@@ -242,6 +259,7 @@ private fun SearchLoadingScreenPreview() {
             cityDataUiState = CityDataUiState.Loading,
             onTextChange = {},
             onClickArea = {},
+            onDialogDismiss = {}
         )
     }
 }
@@ -257,6 +275,40 @@ private fun SearchEmptyScreenPreview() {
             cityDataUiState = CityDataUiState.Loading,
             onTextChange = {},
             onClickArea = {},
+            onDialogDismiss = {}
+        )
+    }
+}
+
+@Composable
+@Preview(
+    showSystemUi = true
+)
+private fun SearcScreenCityContentsDialogPreview() {
+    CDTheme {
+        SearchScreen(
+            searchUiState = SearchUiState.Success(
+                areaModelList = persistentListOf(
+                    AreaModel(
+                        no = 7,
+                        name = "홍대 관광특구",
+                        category = "관광특구",
+                    ),
+                    AreaModel(
+                        no = 53,
+                        name = "홍대입구역(2호선)",
+                        category = "인구밀집지역",
+                    ),
+                )
+            ),
+            cityDataUiState = CityDataUiState.Success(
+                name = "",
+                level = "붐빔",
+                message = "붐비고 있습니다."
+            ),
+            onTextChange = {},
+            onClickArea = {},
+            onDialogDismiss = {}
         )
     }
 }

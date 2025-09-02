@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -39,6 +40,10 @@ class SearchViewModel @Inject constructor(
 
     fun onAreaClick(area: AreaModel) {
         savedStateHandle[SELECTED_AREA_NAME] = area.name
+    }
+
+    fun onCityContentsDialogDismiss() {
+        savedStateHandle[SELECTED_AREA_NAME] = ""
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -65,25 +70,28 @@ class SearchViewModel @Inject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val cityDataUiState: StateFlow<CityDataUiState> = _selectedAreaName.filter {
-        it.isNotEmpty()
-    }.flatMapLatest {
-        getCityDataUseCase(name = it).map { cityDataList ->
-            cityDataList.firstOrNull()?.run {
-                CityDataUiState.Success(
-                    name = name,
-                    level = congestionLevel,
-                    message = congestionMessage
-                )
-            } ?: CityDataUiState.Loading
-        }.catch { throwable ->
-            Log.e(TAG, throwable.message.toString())
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = CityDataUiState.Loading
-    )
+    val cityDataUiState: StateFlow<CityDataUiState> = _selectedAreaName
+        .flatMapLatest {
+            if (it.isEmpty()) { // 값이 비어 있다면 초기 상태
+                flowOf(CityDataUiState.Loading)
+            } else {
+                getCityDataUseCase(name = it).map { cityDataList ->
+                    cityDataList.firstOrNull()?.run {
+                        CityDataUiState.Success(
+                            name = name,
+                            level = congestionLevel,
+                            message = congestionMessage
+                        )
+                    } ?: CityDataUiState.Loading
+                }.catch { throwable ->
+                    Log.e(TAG, throwable.message.toString())
+                }
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = CityDataUiState.Loading
+        )
 }
 
 private const val SEARCH_QUERY = "searchQuery"
