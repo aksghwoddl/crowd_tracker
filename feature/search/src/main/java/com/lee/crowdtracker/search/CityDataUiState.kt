@@ -1,6 +1,7 @@
 package com.lee.crowdtracker.search
 
 import androidx.compose.runtime.Stable
+import com.lee.crowdtracker.core.domain.beach.model.CongestionLevel
 
 @Stable
 sealed interface CityDataUiState {
@@ -8,7 +9,7 @@ sealed interface CityDataUiState {
 
     data class Success(
         val name: String,
-        val level: String,
+        val level: CongestionLevel,
         val message: String,
     ) : CityDataUiState
 }

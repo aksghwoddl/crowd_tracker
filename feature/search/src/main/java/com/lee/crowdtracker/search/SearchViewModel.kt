@@ -30,9 +30,11 @@ class SearchViewModel @Inject constructor(
     private val getCityDataUseCase: GetCityDataUseCase,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val _searchQuery = savedStateHandle.getStateFlow(key = SEARCH_QUERY, initialValue = "")
-    private val _selectedAreaName =
+    private val searchQuery = savedStateHandle.getStateFlow(key = SEARCH_QUERY, initialValue = "")
+    private val selectedAreaName =
         savedStateHandle.getStateFlow(key = SELECTED_AREA_NAME, initialValue = "")
+
+    val isShowDialog = savedStateHandle.getStateFlow(key = IS_SHOW_DIALOG, initialValue = false)
 
     fun onQueryChange(query: String) {
         savedStateHandle[SEARCH_QUERY] = query
@@ -40,14 +42,16 @@ class SearchViewModel @Inject constructor(
 
     fun onAreaClick(area: AreaModel) {
         savedStateHandle[SELECTED_AREA_NAME] = area.name
+        savedStateHandle[IS_SHOW_DIALOG] = true
     }
 
     fun onCityContentsDialogDismiss() {
         savedStateHandle[SELECTED_AREA_NAME] = ""
+        savedStateHandle[IS_SHOW_DIALOG] = false
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    val searchUiState: StateFlow<SearchUiState> = _searchQuery
+    val searchUiState: StateFlow<SearchUiState> = searchQuery
         .debounce(300)
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
@@ -70,7 +74,7 @@ class SearchViewModel @Inject constructor(
         )
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val cityDataUiState: StateFlow<CityDataUiState> = _selectedAreaName
+    val cityDataUiState: StateFlow<CityDataUiState> = selectedAreaName
         .flatMapLatest {
             if (it.isEmpty()) { // 값이 비어 있다면 초기 상태
                 flowOf(CityDataUiState.Loading)
@@ -96,3 +100,4 @@ class SearchViewModel @Inject constructor(
 
 private const val SEARCH_QUERY = "searchQuery"
 private const val SELECTED_AREA_NAME = "selectedAreaName"
+private const val IS_SHOW_DIALOG = "isShowDialog"

@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lee.crowdtracker.core.domain.beach.model.AreaModel
+import com.lee.crowdtracker.core.domain.beach.model.CongestionLevel
 import com.lee.crowdtracker.libray.design.component.CdInputBox
 import com.lee.crowdtracker.libray.design.theme.CDTheme
 import com.lee.crowdtracker.search.component.AreaList
@@ -52,13 +53,15 @@ fun SearchRoute(
 ) {
     val searchUiState by viewModel.searchUiState.collectAsStateWithLifecycle()
     val cityDataUiState by viewModel.cityDataUiState.collectAsStateWithLifecycle()
+    val isShowDialog by viewModel.isShowDialog.collectAsStateWithLifecycle()
 
     SearchScreen(
         searchUiState = searchUiState,
         cityDataUiState = cityDataUiState,
         onTextChange = viewModel::onQueryChange,
         onClickArea = viewModel::onAreaClick,
-        onDialogDismiss = viewModel::onCityContentsDialogDismiss
+        onDialogDismiss = viewModel::onCityContentsDialogDismiss,
+        isShowDialog = isShowDialog
     )
 }
 
@@ -69,78 +72,77 @@ internal fun SearchScreen(
     onDialogDismiss: () -> Unit,
     searchUiState: SearchUiState,
     cityDataUiState: CityDataUiState,
+    isShowDialog: Boolean,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val inputBoxFocusRequester = remember { FocusRequester() }
     var searchText by rememberSaveable { mutableStateOf("") }
 
-    when (cityDataUiState) {
-        is CityDataUiState.Success -> {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        if (isShowDialog) {
             CityContentsDialog(
-                name = cityDataUiState.name,
-                level = cityDataUiState.level,
-                message = cityDataUiState.message,
+                cityDataUiState = cityDataUiState,
                 onDismiss = onDialogDismiss
             )
         }
 
-        CityDataUiState.Loading -> {}
-    }
-
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        CdInputBox(
-            modifier = Modifier
-                .focusRequester(inputBoxFocusRequester)
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp),
-            text = searchText,
-            placeholder = "검색어를 입력하세요.",
-            isShowTrailingIcon = true,
-            trailingIcon = Icons.Default.Search,
-            onTextChange = {
-                searchText = it
-                onTextChange(it)
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    Log.d("TAG", "CdInputBox: done")
-                    keyboardController?.hide()
-                }
-            ),
-        )
-
-        when (searchUiState) {
-            SearchUiState.Loading -> {
-                SearchLoading()
-            }
-
-            is SearchUiState.Empty -> {
-                EmptyResult(
-                    onRetryButtonClick = {
-                        inputBoxFocusRequester.requestFocus()
-                    }
-                )
-            }
-
-            is SearchUiState.Success -> {
-                AreaList(
-                    areaModels = searchUiState.areaModelList.toPersistentList(),
-                    onClickItem = {
-                        onClickArea(it)
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            CdInputBox(
+                modifier = Modifier
+                    .focusRequester(inputBoxFocusRequester)
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
+                text = searchText,
+                placeholder = "검색어를 입력하세요.",
+                isShowTrailingIcon = true,
+                trailingIcon = Icons.Default.Search,
+                onTextChange = {
+                    searchText = it
+                    onTextChange(it)
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        Log.d("TAG", "CdInputBox: done")
                         keyboardController?.hide()
                     }
-                )
-            }
+                ),
+            )
 
-            is SearchUiState.Error -> {
-            }
+            when (searchUiState) {
+                SearchUiState.Loading -> {
+                    SearchLoading()
+                }
 
+                is SearchUiState.Empty -> {
+                    EmptyResult(
+                        onRetryButtonClick = {
+                            inputBoxFocusRequester.requestFocus()
+                        }
+                    )
+                }
+
+                is SearchUiState.Success -> {
+                    AreaList(
+                        areaModels = searchUiState.areaModelList.toPersistentList(),
+                        onClickItem = {
+                            onClickArea(it)
+                            keyboardController?.hide()
+                        }
+                    )
+                }
+
+                is SearchUiState.Error -> {
+                }
+
+            }
         }
     }
 }
@@ -241,6 +243,7 @@ private fun SearchResultScreenPreview() {
                 )
             ),
             cityDataUiState = CityDataUiState.Loading,
+            isShowDialog = true,
             onTextChange = {},
             onClickArea = {},
             onDialogDismiss = {}
@@ -257,6 +260,7 @@ private fun SearchLoadingScreenPreview() {
         SearchScreen(
             searchUiState = SearchUiState.Loading,
             cityDataUiState = CityDataUiState.Loading,
+            isShowDialog = false,
             onTextChange = {},
             onClickArea = {},
             onDialogDismiss = {}
@@ -273,9 +277,10 @@ private fun SearchEmptyScreenPreview() {
         SearchScreen(
             searchUiState = SearchUiState.Empty,
             cityDataUiState = CityDataUiState.Loading,
+            isShowDialog = false,
             onTextChange = {},
             onClickArea = {},
-            onDialogDismiss = {}
+            onDialogDismiss = {},
         )
     }
 }
@@ -302,10 +307,11 @@ private fun SearcScreenCityContentsDialogPreview() {
                 )
             ),
             cityDataUiState = CityDataUiState.Success(
-                name = "",
-                level = "붐빔",
+                name = "홍대입구역",
+                level = CongestionLevel.HIGH,
                 message = "붐비고 있습니다."
             ),
+            isShowDialog = true,
             onTextChange = {},
             onClickArea = {},
             onDialogDismiss = {}

@@ -1,56 +1,63 @@
 package com.lee.crowdtracker.search.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.lee.crowdtracker.core.domain.beach.model.CongestionLevel
 import com.lee.crowdtracker.libray.design.theme.CDTheme
+import com.lee.crowdtracker.search.CityDataUiState
 
-enum class CongestionLevel {
-    LOW,
-    MODERATE,
-    HIGH,
-    SEVERE,
-    UNKNOWN,
-    ;
+@Composable
+fun CityContentsDialog(
+    cityDataUiState: CityDataUiState,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    when (cityDataUiState) {
+        is CityDataUiState.Success -> {
+            ContentsDialog(
+                name = cityDataUiState.name,
+                level = cityDataUiState.level,
+                message = cityDataUiState.message,
+                onDismiss = onDismiss
+            )
+        }
 
-    companion object {
-        fun fromLabel(label: String): CongestionLevel {
-            return when (label) {
-                "여유" -> LOW
-                "보통" -> MODERATE
-                "약간 붐빔" -> HIGH
-                "붐빔" -> SEVERE
-                else -> UNKNOWN
-            }
+        CityDataUiState.Loading -> {
+            LoadingDialog(
+                modifier = modifier,
+                onDismiss = onDismiss,
+            )
         }
     }
 }
 
 @Composable
-fun CityContentsDialog(
+private fun ContentsDialog(
     name: String,
-    level: String,
+    level: CongestionLevel,
     message: String,
-    onDismiss: () -> Unit
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
 ) {
-    val congestionColor = levelColors(CongestionLevel.fromLabel(level))
-
+    val congestionColor = levelColors(level)
     AlertDialog(
+        modifier = modifier.fillMaxWidth(),
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(
@@ -66,7 +73,9 @@ fun CityContentsDialog(
             )
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -74,11 +83,16 @@ fun CityContentsDialog(
                     Box(
                         Modifier
                             .size(10.dp)
-                            .clip(CircleShape)
-                            .background(congestionColor)
+                            .drawBehind(
+                                onDraw = {
+                                    drawCircle(
+                                        color = congestionColor
+                                    )
+                                }
+                            )
                     )
                     Text(
-                        text = level,
+                        text = level.label,
                         style = MaterialTheme.typography.labelLarge,
                         color = congestionColor
                     )
@@ -88,6 +102,39 @@ fun CityContentsDialog(
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
+        }
+    )
+}
+
+@Composable
+private fun LoadingDialog(
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {},
+        title = {
+            Text(
+                text = "불러오는 중...",
+                style = MaterialTheme.typography.titleLarge
+            )
+        },
+        text = {
+            Box {
+                Column(
+                    modifier = modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    CircularProgressIndicator()
+                    Text(
+                        text = "도시 데이터를 가져오는 중입니다.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
         }
     )
 }
@@ -106,9 +153,23 @@ private fun levelColors(level: CongestionLevel): Color = when (level) {
 private fun CityContentsDialogPreview() {
     CDTheme {
         CityContentsDialog(
-            name = "홍제폭포",
-            level = "보통",
-            message = "보통입니다.",
-        ) { }
+            cityDataUiState = CityDataUiState.Success(
+                name = "홍대입구역",
+                level = CongestionLevel.HIGH,
+                message = "붐비고 있습니다!"
+            ),
+            onDismiss = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun CityContentsDialogLaadingPreview() {
+    CDTheme {
+        CityContentsDialog(
+            cityDataUiState = CityDataUiState.Loading,
+            onDismiss = {}
+        )
     }
 }
