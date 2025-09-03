@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lee.crowdtracker.domain"
+    namespace = "com.lee.crowdtracker.core.domain"
 }
 
 dependencies {

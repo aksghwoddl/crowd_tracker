@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lee.bb.base"
+    namespace = "com.lee.crowdtracker.libray.base"
 }
 
 dependencies {

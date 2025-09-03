@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.lee.crowdtracker.test"
+    namespace = "com.lee.crowdtracker.library.test"
 }
 
 dependencies {
