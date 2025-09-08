@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.lee.crowdtracker.libray.design.theme.CDTheme
 import com.lee.crowdtracker.root.ui.CrowdTrackerApp
 import com.lee.crowdtracker.root.ui.rememberCrowdTrackerAppState
@@ -25,6 +22,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.initNaverMapSdk()
         enableEdgeToEdge()
         setContent {
             val snackbarHostState = remember { SnackbarHostState() }
@@ -49,21 +47,5 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.downloadArea()
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CDTheme {
-        Greeting("Android")
     }
 }

@@ -29,6 +29,7 @@
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/presenter" />
             <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/home" />
             <option value="$PROJECT_DIR$/feature/search" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/library/base" />

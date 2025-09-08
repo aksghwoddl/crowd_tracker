@@ -11,8 +11,10 @@ android {
 dependencies {
     implementation(project(":library:design"))
     implementation(project(":library:base"))
+    implementation(project(":library:navermap"))
     implementation(project(":core:domain"))
     implementation(project(":core:presenter"))
+    implementation(project(":feature:home"))
     implementation(project(":feature:search"))
 
     implementation(libs.core.ktx)

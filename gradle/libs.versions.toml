@@ -40,6 +40,7 @@ navigation = "2.9.3"
 uiTooling = "1.8.3"
 kotlin-immutable = "0.4.0"
 hilt-compose = "1.2.0"
+naverMap = "3.22.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android_application" }
@@ -115,7 +116,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
+
+# Naver
+naver-map-sdk = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverMap" }
 
 [bundles]
 unit-test = [

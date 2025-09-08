@@ -1,9 +1,9 @@
 package com.lee.crowdtracker.core.data.impl.repository
 
 import com.lee.crowdtracker.core.data.dto.CityDataResponseDto
+import com.lee.crowdtracker.core.data.impl.BuildConfig
 import com.lee.crowdtracker.core.data.impl.service.SeoulOpenApiService
 import com.lee.crowdtracker.core.data.repository.SeoulCityDataRepository
-import com.lee.crowdtracker.data.impl.BuildConfig
 import jakarta.inject.Inject
 
 class SeoulCityDataRepositoryImpl @Inject constructor(
