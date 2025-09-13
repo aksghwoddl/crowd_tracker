@@ -3,12 +3,10 @@ package com.lee.crowdtracker.core.presenter.screen
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class CrowdTrackerScreen(
-    val route: String,
-) {
+sealed interface CrowdTrackerScreen {
     @Serializable
-    data object SearchRoute : CrowdTrackerScreen(route = "search")
+    data object SearchRoute : CrowdTrackerScreen
 
     @Serializable
-    data object HomeRoute : CrowdTrackerScreen(route = "home")
+    data object HomeRoute : CrowdTrackerScreen
 }

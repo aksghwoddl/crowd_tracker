@@ -22,7 +22,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewModel.initNaverMapSdk()
+
         enableEdgeToEdge()
         setContent {
             val snackbarHostState = remember { SnackbarHostState() }

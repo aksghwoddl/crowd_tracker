@@ -51,9 +51,9 @@ internal fun CrowdTrackerApp(
         NavHost(
             navController = appState.navController,
             modifier = Modifier.padding(innerPadding),
-            startDestination = CrowdTrackerScreen.HomeRoute.route,
+            startDestination = CrowdTrackerScreen.HomeRoute
         ) {
-            composable(CrowdTrackerScreen.SearchRoute.route) {
+            composable<CrowdTrackerScreen.SearchRoute> {
                 SearchRoute(
                     onShowSnackBar = { message, actionLabel ->
                         snackbarHostState.showSnackbar(
@@ -64,7 +64,7 @@ internal fun CrowdTrackerApp(
                     }
                 )
             }
-            composable(CrowdTrackerScreen.HomeRoute.route) {
+            composable<CrowdTrackerScreen.HomeRoute> {
                 HomeRoute(
                     onShowSnackBar = { message, actionLabel ->
                         snackbarHostState.showSnackbar(
