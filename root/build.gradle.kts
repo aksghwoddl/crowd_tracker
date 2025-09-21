@@ -19,6 +19,7 @@ dependencies {
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.androidx.core.splash)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
