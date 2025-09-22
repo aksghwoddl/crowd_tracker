@@ -21,10 +21,11 @@ import com.lee.crowdtracker.root.ui.rememberCrowdTrackerAppState
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity"
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
-    private val requestPermissionLauncher =
+    private val permissionLauncher by lazy {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.values.all { it }) { // 모든 권한이 충족되면
                 viewModel.onPermissionGranted()
@@ -33,6 +34,7 @@ class MainActivity : ComponentActivity() {
                 finish()
             }
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,12 +42,13 @@ class MainActivity : ComponentActivity() {
             viewModel.isInitialized.value.not()
         }
 
-        requestPermissionLauncher.launch(
+        permissionLauncher.launch(
             arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
             )
         )
+
         viewModel.initNaverMapSdk()
         enableEdgeToEdge()
         setContent {

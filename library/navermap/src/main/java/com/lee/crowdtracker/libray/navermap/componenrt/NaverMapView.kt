@@ -1,6 +1,5 @@
 package com.lee.crowdtracker.libray.navermap.componenrt
 
-import android.R.style
 import android.view.ContextThemeWrapper
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -12,6 +11,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.lee.crowdtracker.libray.design.R
 import com.naver.maps.map.MapView
 
 @Composable
@@ -22,7 +22,7 @@ fun rememberMapViewWithLifeCycle(): MapView {
         MapView(
             ContextThemeWrapper(
                 context,
-                style.Theme
+                R.style.Theme_CrowdTracker_AppCompat
             )
         )
     }

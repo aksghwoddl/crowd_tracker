@@ -42,6 +42,7 @@ uiTooling = "1.8.3"
 kotlin-immutable = "0.4.0"
 hilt-compose = "1.2.0"
 naverMap = "3.22.1"
+gmsLocation = "21.3.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android_application" }
@@ -121,6 +122,9 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version.ref =
 
 # Naver
 naver-map-sdk = { group = "com.naver.maps", name = "map-sdk", version.ref = "naverMap" }
+
+# Gms
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "gmsLocation" }
 
 [bundles]
 unit-test = [

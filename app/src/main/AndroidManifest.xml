@@ -14,11 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.BeachCongetionPJ">
+        android:theme="@style/Theme.CrowdTracker">
         <activity
             android:name="com.lee.crowdtracker.root.MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.BeachCongetionPJ">
+            android:theme="@style/Theme.CrowdTracker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
