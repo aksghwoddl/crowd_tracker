@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lee.crowdtracker.core.domain.beach.usecase.area.DownloadAreaByCsvUseCase
 import com.lee.crowdtracker.library.base.exts.runSuspendCatching
-import com.lee.crowdtracker.libray.navermap.NaverMapSdkController
+import com.lee.crowdtracker.libray.navermap.NaverMapSdkControllerImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ private const val TAG = "MainViewModel"
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val downloadAreaByCsvUseCase: DownloadAreaByCsvUseCase,
-    private val naverMapSdkController: NaverMapSdkController,
+    private val naverMapSdkControllerImpl: NaverMapSdkControllerImpl,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -41,7 +41,7 @@ class MainViewModel @Inject constructor(
     )
 
     fun initNaverMapSdk() {
-        naverMapSdkController.init()
+        naverMapSdkControllerImpl.init()
         savedStateHandle[INIT_MAP] = true
     }
 

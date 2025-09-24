@@ -12,6 +12,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.lee.crowdtracker.libray.design.R
+import com.lee.crowdtracker.libray.navermap.LocalFusedLocationSource
 import com.naver.maps.map.MapView
 
 @Composable
@@ -29,6 +30,7 @@ fun rememberMapViewWithLifeCycle(): MapView {
 
     DisposableEffect(lifecycle) {
         val observer = object : DefaultLifecycleObserver {
+            override fun onCreate(owner: LifecycleOwner) = mapView.onCreate(null)
             override fun onStart(owner: LifecycleOwner) = mapView.onStart()
             override fun onResume(owner: LifecycleOwner) = mapView.onResume()
             override fun onPause(owner: LifecycleOwner) = mapView.onPause()
@@ -47,14 +49,16 @@ fun NaverMapView(
     modifier: Modifier = Modifier,
 ) {
     val mapView = rememberMapViewWithLifeCycle()
+    val locationSource = LocalFusedLocationSource.current
 
     AndroidView(
         modifier = modifier.fillMaxSize(),
         factory = { mapView },
-        update = {
-            it.getMapAsync { naverMap ->
+        update = { view ->
+            view.getMapAsync { naverMap ->
                 naverMap.minZoom = 5.5
                 naverMap.uiSettings.isLocationButtonEnabled = true
+                naverMap.locationSource = locationSource
             }
         }
     )

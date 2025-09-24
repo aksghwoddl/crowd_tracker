@@ -11,6 +11,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.naver.map.sdk)
+    api(libs.naver.map.sdk)
+    implementation(libs.play.services.location)
     implementation(project(":library:design"))
 }

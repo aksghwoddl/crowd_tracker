@@ -1,6 +1,7 @@
 package com.lee.crowdtracker.root
 
 import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -12,12 +13,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.lee.crowdtracker.libray.design.theme.CDTheme
+import com.lee.crowdtracker.libray.navermap.LocalFusedLocationSource
 import com.lee.crowdtracker.root.ui.CrowdTrackerApp
 import com.lee.crowdtracker.root.ui.rememberCrowdTrackerAppState
+import com.naver.maps.map.util.FusedLocationSource
 import dagger.hilt.android.AndroidEntryPoint
 
 private const val TAG = "MainActivity"
@@ -25,10 +29,23 @@ private const val TAG = "MainActivity"
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
+    val locationSource by lazy {
+        FusedLocationSource(
+            this,
+            LOCATION_PERMISSION_CODE
+        )
+    }
     private val permissionLauncher by lazy {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             if (permissions.values.all { it }) { // 모든 권한이 충족되면
                 viewModel.onPermissionGranted()
+                locationSource.onRequestPermissionsResult(
+                    LOCATION_PERMISSION_CODE,
+                    permissions.keys.toTypedArray(),
+                    permissions.values.map {
+                        if (it) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+                    }.toIntArray()
+                )
             } else {
                 Toast.makeText(this, "필수 권한을 설정 해주세요!", Toast.LENGTH_SHORT).show()
                 finish()
@@ -56,23 +73,33 @@ class MainActivity : ComponentActivity() {
             val appState = rememberCrowdTrackerAppState(
                 snackbarHostState = snackbarHostState
             )
-            CDTheme {
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) { innerPadding ->
-                    CrowdTrackerApp(
-                        modifier = Modifier.padding(innerPadding),
-                        snackbarHostState = snackbarHostState,
-                        appState = appState
-                    )
+
+            CompositionLocalProvider(
+                LocalFusedLocationSource provides locationSource
+            ) {
+                CDTheme {
+                    Scaffold(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) { innerPadding ->
+                        CrowdTrackerApp(
+                            modifier = Modifier.padding(innerPadding),
+                            snackbarHostState = snackbarHostState,
+                            appState = appState
+                        )
+                    }
                 }
             }
+
         }
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.downloadArea()
+    }
+
+    companion object {
+        private const val LOCATION_PERMISSION_CODE = 1000
     }
 }
