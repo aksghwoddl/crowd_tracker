@@ -14,4 +14,6 @@ dependencies {
     api(libs.naver.map.sdk)
     implementation(libs.play.services.location)
     implementation(project(":library:design"))
+    implementation(libs.coroutines.android)
+    implementation(libs.coroutines.core)
 }
