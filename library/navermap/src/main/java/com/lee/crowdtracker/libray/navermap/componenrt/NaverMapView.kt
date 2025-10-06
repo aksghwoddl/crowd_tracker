@@ -13,7 +13,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.lee.crowdtracker.libray.design.R
 import com.lee.crowdtracker.libray.navermap.LocalFusedLocationSource
+import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
+import com.naver.maps.map.overlay.LocationOverlay
 
 @Composable
 fun rememberMapViewWithLifeCycle(): MapView {
@@ -59,6 +61,8 @@ fun NaverMapView(
                 naverMap.minZoom = 5.5
                 naverMap.uiSettings.isLocationButtonEnabled = true
                 naverMap.locationSource = locationSource
+                naverMap.locationTrackingMode = LocationTrackingMode.Follow
+                naverMap.locationOverlay.isVisible = true
             }
         }
     )
