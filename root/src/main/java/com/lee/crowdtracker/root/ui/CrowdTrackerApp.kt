@@ -16,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.lee.crowdtracker.core.presenter.screen.CrowdTrackerScreen
+import com.lee.crowdtracker.feature.home.HomeRoute
 import com.lee.crowdtracker.libray.design.component.BottomNavigationBar
 import com.lee.crowdtracker.libray.design.navigation.TopLevelDestination
-import com.lee.crowdtracker.root.Greeting
 import com.lee.crowdtracker.search.SearchRoute
 
 @Composable
@@ -51,9 +51,9 @@ internal fun CrowdTrackerApp(
         NavHost(
             navController = appState.navController,
             modifier = Modifier.padding(innerPadding),
-            startDestination = CrowdTrackerScreen.HomeRoute.route,
+            startDestination = CrowdTrackerScreen.HomeRoute
         ) {
-            composable(CrowdTrackerScreen.SearchRoute.route) {
+            composable<CrowdTrackerScreen.SearchRoute> {
                 SearchRoute(
                     onShowSnackBar = { message, actionLabel ->
                         snackbarHostState.showSnackbar(
@@ -64,10 +64,17 @@ internal fun CrowdTrackerApp(
                     }
                 )
             }
-            composable(CrowdTrackerScreen.HomeRoute.route) {
-                Greeting(name = CrowdTrackerScreen.HomeRoute.route)
+            composable<CrowdTrackerScreen.HomeRoute> {
+                HomeRoute(
+                    onShowSnackBar = { message, actionLabel ->
+                        snackbarHostState.showSnackbar(
+                            message = message,
+                            actionLabel = actionLabel,
+                            duration = Short,
+                        )
+                    }
+                )
             }
         }
     }
-
 }

@@ -4,11 +4,14 @@ plugins {
 }
 
 android {
-    namespace = "com.lee.crowdtracker.libray.design"
+    namespace = "com.lee.crowdtracker.libray.navermap"
 }
 
 dependencies {
     implementation(libs.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+    api(libs.naver.map.sdk)
+    implementation(libs.play.services.location)
+    implementation(project(":library:design"))
 }

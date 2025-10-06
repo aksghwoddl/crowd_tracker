@@ -81,7 +81,7 @@ fun CdInputBox(
                 },
             singleLine = true,
             textStyle = TextStyle(
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium
             ),

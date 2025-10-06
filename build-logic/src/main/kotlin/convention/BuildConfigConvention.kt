@@ -22,6 +22,11 @@ fun Project.buildConfigConfiguration(
                 "SEOUL_OPEN_API_KEY",
                 properties["seoul_openapi_key"].toString()
             )
+            buildConfigField(
+                "String",
+                "NAVER_CLIENT_ID",
+                properties["naver-client-id"].toString()
+            )
         }
         getByName("debug") {
             buildConfigField("boolean", "APP_DEBUG", true.toString())
@@ -29,6 +34,11 @@ fun Project.buildConfigConfiguration(
                 "String",
                 "SEOUL_OPEN_API_KEY",
                 properties["seoul_openapi_key"].toString()
+            )
+            buildConfigField(
+                "String",
+                "NAVER_CLIENT_ID",
+                properties["naver-client-id"].toString()
             )
         }
     }

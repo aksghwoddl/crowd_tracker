@@ -29,11 +29,13 @@
             <option value="$PROJECT_DIR$/core/domain" />
             <option value="$PROJECT_DIR$/core/presenter" />
             <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/home" />
             <option value="$PROJECT_DIR$/feature/search" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/library/base" />
             <option value="$PROJECT_DIR$/library/design" />
             <option value="$PROJECT_DIR$/library/design-system" />
+            <option value="$PROJECT_DIR$/library/navermap" />
             <option value="$PROJECT_DIR$/library/test" />
             <option value="$PROJECT_DIR$/root" />
           </set>

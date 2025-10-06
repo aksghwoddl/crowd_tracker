@@ -11,12 +11,16 @@ android {
 dependencies {
     implementation(project(":library:design"))
     implementation(project(":library:base"))
+    implementation(project(":library:navermap"))
     implementation(project(":core:domain"))
     implementation(project(":core:presenter"))
+    implementation(project(":feature:home"))
     implementation(project(":feature:search"))
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.androidx.core.splash)
+    implementation(libs.play.services.location)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

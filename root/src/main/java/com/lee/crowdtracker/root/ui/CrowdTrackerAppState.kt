@@ -32,8 +32,8 @@ data class CrowdTrackerAppState(
             if (it == destination) return
         }
         val route = when (destination) {
-            is TopLevelDestination.Home -> CrowdTrackerScreen.HomeRoute.route
-            is TopLevelDestination.Search -> CrowdTrackerScreen.SearchRoute.route
+            is TopLevelDestination.Home -> CrowdTrackerScreen.HomeRoute
+            is TopLevelDestination.Search -> CrowdTrackerScreen.SearchRoute
         }
 
         navController.navigate(route) {
