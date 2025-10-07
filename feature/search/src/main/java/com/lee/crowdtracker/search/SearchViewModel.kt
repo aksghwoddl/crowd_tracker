@@ -4,9 +4,10 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lee.crowdtracker.core.domain.beach.model.AreaModel
 import com.lee.crowdtracker.core.domain.beach.usecase.area.GetAreaListByNameUseCase
 import com.lee.crowdtracker.core.domain.beach.usecase.citydata.GetCityDataUseCase
+import com.lee.crowdtracker.search.model.Area
+import com.lee.crowdtracker.search.model.toArea
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -40,7 +41,7 @@ class SearchViewModel @Inject constructor(
         savedStateHandle[SEARCH_QUERY] = query
     }
 
-    fun onAreaClick(area: AreaModel) {
+    fun onAreaClick(area: Area) {
         savedStateHandle[SELECTED_AREA_NAME] = area.name
         savedStateHandle[IS_SHOW_DIALOG] = true
     }
@@ -60,7 +61,11 @@ class SearchViewModel @Inject constructor(
                 if (areaList.isEmpty()) {
                     SearchUiState.Empty
                 } else {
-                    SearchUiState.Success(areaModelList = areaList)
+                    SearchUiState.Success(
+                        areaList = areaList.map { areaModel ->
+                            areaModel.toArea()
+                        }
+                    )
                 }
             }.catch { throwable ->
                 Log.e(TAG, throwable.message.toString())

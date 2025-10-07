@@ -35,6 +35,7 @@
             <option value="$PROJECT_DIR$/library/base" />
             <option value="$PROJECT_DIR$/library/design" />
             <option value="$PROJECT_DIR$/library/design-system" />
+            <option value="$PROJECT_DIR$/library/location" />
             <option value="$PROJECT_DIR$/library/navermap" />
             <option value="$PROJECT_DIR$/library/test" />
             <option value="$PROJECT_DIR$/root" />

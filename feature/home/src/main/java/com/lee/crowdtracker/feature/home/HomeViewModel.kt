@@ -1,97 +1,108 @@
 package com.lee.crowdtracker.feature.home
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lee.crowdtracker.core.domain.beach.usecase.area.GetAreaListUseCase
-import com.lee.crowdtracker.core.domain.beach.usecase.citydata.GetCityDataUseCase
+import com.lee.crowdtracker.core.domain.beach.model.CrowdDataModel
+import com.lee.crowdtracker.core.domain.beach.usecase.home.GetCrowdDataUseCase
+import com.lee.crowdtracker.libray.navermap.NaverMapSdkController
+import com.lee.crowdtracker.libray.navermap.model.CrowdMarkerData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Semaphore
-import kotlinx.coroutines.sync.withPermit
-import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 private const val TAG = "HomeViewModel"
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getAreaListUseCase: GetAreaListUseCase,
-    private val getCityDataUseCase: GetCityDataUseCase,
+    private val getCrowdDataUseCase: GetCrowdDataUseCase,
+    private val naverMapSdkController: NaverMapSdkController,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private val fetchTrigger = MutableSharedFlow<Unit>()
 
-    private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
-    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+    val selectedMarkerId = savedStateHandle.getStateFlow(KEY_SELECTED_MARKER_ID, "")
 
-    private var loadJob: Job? = null
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val uiState: StateFlow<HomeUiState> = fetchTrigger
+        .onStart { emit(Unit) }
+        .flatMapLatest {
+            flow {
+                emit(HomeUiState.Loading)
+                val crowdDataList = getCrowdDataUseCase()
 
-    init {
-        loadMarkers()
-    }
-
-    fun refresh() {
-        loadMarkers()
-    }
-
-    private fun loadMarkers() {
-        loadJob?.cancel()
-        loadJob = viewModelScope.launch {
-            _uiState.emit(HomeUiState.Loading)
-            try {
-                val areas = withContext(Dispatchers.IO) {
-                    getAreaListUseCase()
-                }
-
-                if (areas.isEmpty()) {
-                    _uiState.emit(HomeUiState.Error("저장된 지역 정보가 없습니다."))
-                    return@launch
-                }
-
-                val semaphore = Semaphore(permits = 6)
-
-                val markers = withContext(Dispatchers.IO) {
-                    areas.map { area ->
-                        async {
-                            semaphore.withPermit {
-                                runCatching {
-                                    getCityDataUseCase(name = area.name).first()
-                                        .firstOrNull()
-                                }.onFailure { error ->
-                                    Log.e(TAG, "도시 데이터 요청 실패(${area.name})", error)
-                                }.getOrNull()?.let { cityData ->
-                                    AreaCongestionUiModel(
-                                        id = area.no,
-                                        name = cityData.name,
-                                        category = area.category,
-                                        congestionLevel = cityData.congestionLevel,
-                                        congestionMessage = cityData.congestionMessage,
-                                    )
-                                }
-                            }
-                        }
-                    }.mapNotNull { it.await() }
-                        .sortedBy { it.id }
-                }
-
-                if (markers.isEmpty()) {
-                    _uiState.emit(HomeUiState.Error("혼잡도 정보를 불러오지 못했습니다."))
+                if (crowdDataList.isEmpty()) {
+                    emit(HomeUiState.Error("마커정보를 불러오지 못했습니다."))
                 } else {
-                    _uiState.emit(HomeUiState.Success(markers = markers))
+                    emit(
+                        HomeUiState.Success(
+                            crowdMarkerData = buildCrowdMarkerDataList(
+                                crowdDataList = crowdDataList
+                            ).toPersistentList()
+                        )
+                    )
                 }
-            } catch (cancellation: CancellationException) {
-                throw cancellation
-            } catch (throwable: Throwable) {
-                Log.e(TAG, "혼잡도 로딩 실패", throwable)
-                _uiState.emit(HomeUiState.Error("혼잡도 정보를 불러오지 못했습니다."))
+            }.catch {
+                emit(HomeUiState.Error("마커 정보를 불러오는중 에러 발생"))
             }
         }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = HomeUiState.Loading
+        )
+
+    fun onRetry() {
+        viewModelScope.launch {
+            fetchTrigger.emit(Unit)
+        }
+    }
+
+    fun onMarkerClick(id: String) {
+        savedStateHandle[KEY_SELECTED_MARKER_ID] = id
+    }
+
+    fun onSelectedMarkerCardDismiss() {
+        savedStateHandle[KEY_SELECTED_MARKER_ID] = ""
+    }
+
+    private suspend fun buildCrowdMarkerDataList(crowdDataList: List<CrowdDataModel>) =
+        buildList {
+            crowdDataList.map { crowdData ->
+                val latLng = naverMapSdkController.getLatLngByName(
+                    name = crowdData.name,
+                    onCancellation = {
+                        Log.e(TAG, "buildCrowdMarkerDataList cancel by", it)
+                    }
+                )
+                if (latLng.isValid) {
+                    add(
+                        CrowdMarkerData(
+                            id = crowdData.id.toString(),
+                            name = crowdData.name,
+                            category = crowdData.category,
+                            description = crowdData.congestionMessage,
+                            level = crowdData.congestionLevel,
+                            latLng = latLng
+                        )
+                    )
+                }
+            }
+        }
+
+
+    companion object {
+        private const val KEY_SELECTED_MARKER_ID = "selectedMarkerId"
     }
 }

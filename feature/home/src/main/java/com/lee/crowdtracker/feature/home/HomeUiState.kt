@@ -1,26 +1,18 @@
 package com.lee.crowdtracker.feature.home
 
 import androidx.compose.runtime.Stable
-import com.lee.crowdtracker.core.domain.beach.model.CongestionLevel
+import com.lee.crowdtracker.libray.navermap.model.CrowdMarkerData
+import kotlinx.collections.immutable.PersistentList
 
 @Stable
 sealed interface HomeUiState {
     data object Loading : HomeUiState
 
     data class Success(
-        val markers: List<AreaCongestionUiModel>,
+        val crowdMarkerData: PersistentList<CrowdMarkerData>,
     ) : HomeUiState
 
     data class Error(
         val message: String,
     ) : HomeUiState
 }
-
-@Stable
-data class AreaCongestionUiModel(
-    val id: Int,
-    val name: String,
-    val category: String,
-    val congestionLevel: CongestionLevel,
-    val congestionMessage: String,
-)
