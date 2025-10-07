@@ -15,7 +15,9 @@ import com.lee.crowdtracker.libray.design.R
 import com.lee.crowdtracker.libray.navermap.LocalFusedLocationSource
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.MapView
-import com.naver.maps.map.overlay.LocationOverlay
+import com.naver.maps.map.NaverMap
+
+private const val TAG = "NaverMapView"
 
 @Composable
 fun rememberMapViewWithLifeCycle(): MapView {
@@ -25,7 +27,7 @@ fun rememberMapViewWithLifeCycle(): MapView {
         MapView(
             ContextThemeWrapper(
                 context,
-                R.style.Theme_CrowdTracker_AppCompat
+                R.style.Theme_CrowdTracker_AppCompat,
             )
         )
     }
@@ -49,21 +51,23 @@ fun rememberMapViewWithLifeCycle(): MapView {
 @Composable
 fun NaverMapView(
     modifier: Modifier = Modifier,
+    onMapReady: (NaverMap) -> Unit,
 ) {
     val mapView = rememberMapViewWithLifeCycle()
     val locationSource = LocalFusedLocationSource.current
 
     AndroidView(
         modifier = modifier.fillMaxSize(),
-        factory = { mapView },
-        update = { view ->
-            view.getMapAsync { naverMap ->
-                naverMap.minZoom = 5.5
-                naverMap.uiSettings.isLocationButtonEnabled = true
-                naverMap.locationSource = locationSource
-                naverMap.locationTrackingMode = LocationTrackingMode.Follow
-                naverMap.locationOverlay.isVisible = true
+        factory = {
+            mapView.getMapAsync { map ->
+                map.minZoom = 5.5
+                map.uiSettings.isLocationButtonEnabled = true
+                map.locationSource = locationSource
+                map.locationTrackingMode = LocationTrackingMode.Follow
+                map.locationOverlay.isVisible = true
+                onMapReady(map)
             }
+            mapView
         }
     )
 }

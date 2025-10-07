@@ -22,15 +22,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.lee.crowdtracker.core.domain.beach.model.AreaModel
 import com.lee.crowdtracker.libray.design.theme.CDTheme
+import com.lee.crowdtracker.search.model.Area
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun AreaList(
-    areaModels: PersistentList<AreaModel>,
-    onClickItem: (AreaModel) -> Unit,
+    areaList: PersistentList<Area>,
+    onClickItem: (Area) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -41,12 +41,12 @@ fun AreaList(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(
-            items = areaModels,
+            items = areaList,
             key = { it.no },
             contentType = { it.category }
         ) { area ->
             AreaItem(
-                areaModel = area,
+                area = area,
                 onClick = onClickItem
             )
         }
@@ -55,14 +55,14 @@ fun AreaList(
 
 @Composable
 internal fun AreaItem(
-    areaModel: AreaModel,
-    onClick: (AreaModel) -> Unit,
+    area: Area,
+    onClick: (Area) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClick(areaModel) },
+            .clickable { onClick(area) },
         shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
@@ -74,13 +74,13 @@ internal fun AreaItem(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             Text(
-                text = "${areaModel.no}. ${areaModel.name}",
+                text = "${area.no}. ${area.name}",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = areaModel.category,
+                text = area.category,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.primary
             )
@@ -95,9 +95,9 @@ internal fun AreaItem(
 private fun SearchResultListPreview() {
     CDTheme {
         AreaList(
-            areaModels = persistentListOf(
-                AreaModel(no = 7, name = "홍대 관광특구", category = "관광특구"),
-                AreaModel(no = 53, name = "홍대입구역(2호선)", category = "인구밀집지역"),
+            areaList = persistentListOf(
+                Area(no = 7, name = "홍대 관광특구", category = "관광특구"),
+                Area(no = 53, name = "홍대입구역(2호선)", category = "인구밀집지역"),
             ),
             onClickItem = {}
         )

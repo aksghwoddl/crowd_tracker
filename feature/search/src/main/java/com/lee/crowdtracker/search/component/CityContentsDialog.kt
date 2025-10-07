@@ -55,7 +55,6 @@ private fun ContentsDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
 ) {
-    val congestionColor = levelColors(level)
     AlertDialog(
         modifier = modifier.fillMaxWidth(),
         onDismissRequest = onDismiss,
@@ -86,7 +85,7 @@ private fun ContentsDialog(
                             .drawBehind(
                                 onDraw = {
                                     drawCircle(
-                                        color = congestionColor
+                                        color = Color(level.color)
                                     )
                                 }
                             )
@@ -94,7 +93,7 @@ private fun ContentsDialog(
                     Text(
                         text = level.label,
                         style = MaterialTheme.typography.labelLarge,
-                        color = congestionColor
+                        color = Color(level.color)
                     )
                 }
                 Text(
@@ -137,15 +136,6 @@ private fun LoadingDialog(
 
         }
     )
-}
-
-@Composable
-private fun levelColors(level: CongestionLevel): Color = when (level) {
-    CongestionLevel.LOW -> Color(0xFF2E7D32)
-    CongestionLevel.MODERATE -> Color(0xFF1976D2)
-    CongestionLevel.HIGH -> Color(0xFFF57C00)
-    CongestionLevel.SEVERE -> Color(0xFFC62828)
-    CongestionLevel.UNKNOWN -> Color(0xFF9E9E9E)
 }
 
 @Preview

@@ -35,12 +35,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.lee.crowdtracker.core.domain.beach.model.AreaModel
 import com.lee.crowdtracker.core.domain.beach.model.CongestionLevel
 import com.lee.crowdtracker.libray.design.component.CdInputBox
 import com.lee.crowdtracker.libray.design.theme.CDTheme
 import com.lee.crowdtracker.search.component.AreaList
 import com.lee.crowdtracker.search.component.CityContentsDialog
+import com.lee.crowdtracker.search.model.Area
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
@@ -68,7 +68,7 @@ fun SearchRoute(
 @Composable
 internal fun SearchScreen(
     onTextChange: (String) -> Unit,
-    onClickArea: (AreaModel) -> Unit,
+    onClickArea: (Area) -> Unit,
     onDialogDismiss: () -> Unit,
     searchUiState: SearchUiState,
     cityDataUiState: CityDataUiState,
@@ -131,7 +131,7 @@ internal fun SearchScreen(
 
                 is SearchUiState.Success -> {
                     AreaList(
-                        areaModels = searchUiState.areaModelList.toPersistentList(),
+                        areaList = searchUiState.areaList.toPersistentList(),
                         onClickItem = {
                             onClickArea(it)
                             keyboardController?.hide()
@@ -229,13 +229,13 @@ private fun SearchResultScreenPreview() {
     CDTheme {
         SearchScreen(
             searchUiState = SearchUiState.Success(
-                areaModelList = persistentListOf(
-                    AreaModel(
+                areaList = persistentListOf(
+                    Area(
                         no = 7,
                         name = "홍대 관광특구",
                         category = "관광특구",
                     ),
-                    AreaModel(
+                    Area(
                         no = 53,
                         name = "홍대입구역(2호선)",
                         category = "인구밀집지역",
@@ -293,13 +293,13 @@ private fun SearcScreenCityContentsDialogPreview() {
     CDTheme {
         SearchScreen(
             searchUiState = SearchUiState.Success(
-                areaModelList = persistentListOf(
-                    AreaModel(
+                areaList = persistentListOf(
+                    Area(
                         no = 7,
                         name = "홍대 관광특구",
                         category = "관광특구",
                     ),
-                    AreaModel(
+                    Area(
                         no = 53,
                         name = "홍대입구역(2호선)",
                         category = "인구밀집지역",
