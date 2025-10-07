@@ -27,7 +27,7 @@ class NaverMapSdkControllerImpl @Inject constructor(
     override suspend fun getLatLngByName(
         name: String,
         onCancellation: (Throwable) -> Unit,
-    ): LatLng = withContext(Dispatchers.Default) {
+    ): LatLng = withContext(Dispatchers.IO) {
         if (Geocoder.isPresent().not()) {
             return@withContext LatLng.INVALID
         }
@@ -62,7 +62,11 @@ class NaverMapSdkControllerImpl @Inject constructor(
                     },
                     onFailure = {
                         Log.e(TAG, "getLatLngByName: fail get LatLng", it)
-                        LatLng.INVALID
+                        if (continuation.isActive) {
+                            continuation.resume(LatLng.INVALID) { cause, _, _ ->
+                                onCancellation(cause)
+                            }
+                        }
                     }
                 )
             }
