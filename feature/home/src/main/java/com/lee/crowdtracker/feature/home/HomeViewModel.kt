@@ -34,13 +34,18 @@ class HomeViewModel @Inject constructor(
     private val naverMapSdkController: NaverMapSdkController,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    private var isFetchData: Boolean = false
     private val fetchTrigger = MutableSharedFlow<Unit>()
-
     val selectedMarkerId = savedStateHandle.getStateFlow(KEY_SELECTED_MARKER_ID, "")
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiState: StateFlow<HomeUiState> = fetchTrigger
-        .onStart { emit(Unit) }
+        .onStart {
+            if (isFetchData.not()) {
+                emit(Unit)
+                isFetchData = true
+            }
+        }
         .flatMapLatest {
             flow {
                 emit(HomeUiState.Loading)
