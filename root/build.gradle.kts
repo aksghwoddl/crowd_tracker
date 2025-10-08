@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":library:base"))
     implementation(project(":library:navermap"))
     implementation(project(":core:domain"))
+    implementation(project(":core:data"))
     implementation(project(":core:presenter"))
     implementation(project(":feature:home"))
     implementation(project(":feature:search"))

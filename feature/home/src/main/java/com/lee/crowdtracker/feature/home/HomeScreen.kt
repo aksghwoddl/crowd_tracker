@@ -28,11 +28,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.lee.crowdtracker.feature.home.component.CongestionLegend
 import com.lee.crowdtracker.feature.home.component.SelectedMarkerCard
-import com.lee.crowdtracker.library.base.exts.runSuspendCatching
 import com.lee.crowdtracker.libray.design.theme.CDTheme
 import com.lee.crowdtracker.libray.navermap.componenrt.NaverMapView
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.MarkerIcons
@@ -66,7 +66,6 @@ internal fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
     var naverMap by remember { mutableStateOf<NaverMap?>(null) }
-    var isInitCamera by remember { mutableStateOf(false) }
 
     val markerOverlays by produceState(
         key1 = state is HomeUiState.Success,
@@ -75,11 +74,9 @@ internal fun HomeScreen(
     ) {
         when (state) {
             is HomeUiState.Success -> {
-                val boundsBuilder = LatLngBounds.Builder()
                 state.crowdMarkerData
                     .filter { it.latLng != LatLngBounds.INVALID }
                     .forEach { markerData ->
-                        boundsBuilder.include(markerData.latLng)
                         value = buildMap {
                             put(
                                 key = markerData.id,
@@ -101,16 +98,7 @@ internal fun HomeScreen(
                             )
                         }
                     }
-
-                if (isInitCamera.not()) {
-                    runSuspendCatching {
-                        val bounds = boundsBuilder.build()
-                        naverMap?.moveCamera(CameraUpdate.fitBounds(bounds, 80))
-                        isInitCamera = true
-                    }.onFailure { error ->
-                        Log.e(TAG, "카메라 초기화 실패", error)
-                    }
-                }
+                naverMap?.locationOverlay?.isVisible = true
             }
 
             else -> {
@@ -170,7 +158,6 @@ internal fun HomeScreen(
     DisposableEffect(Unit) {
         onDispose {
             markerOverlays.values.forEach { it.map = null }
-            isInitCamera = false
             naverMap = null
         }
     }

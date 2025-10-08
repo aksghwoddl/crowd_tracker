@@ -1,5 +1,6 @@
 package com.lee.crowdtracker.core.domain
 
+import com.lee.crowdtracker.core.data.datasource.preference.PreferenceDataSource
 import com.lee.crowdtracker.core.data.datastore.PreferenceDataStore
 import com.lee.crowdtracker.core.data.dto.AreaDto
 import com.lee.crowdtracker.core.data.repository.AreaRepository
@@ -17,7 +18,7 @@ class DownloadAreaByCsvUseCaseTest : BaseTest() {
     lateinit var areaRepository: AreaRepository
 
     @MockK
-    lateinit var preferenceDataStore: PreferenceDataStore
+    lateinit var preferenceDataSource: PreferenceDataSource
 
     private lateinit var useCase: DownloadAreaByCsvUseCase
 
@@ -25,13 +26,13 @@ class DownloadAreaByCsvUseCaseTest : BaseTest() {
         super.setup()
         useCase = DownloadAreaByCsvUseCase(
             areaRepository = areaRepository,
-            preferenceDataStore = preferenceDataStore,
+            preferenceDataSource = preferenceDataSource,
         )
     }
 
     @Test
     fun `이미 다운로드를 받은 경우 테스트`() = runTest {
-        coEvery { preferenceDataStore.isDownloadArea } returns flowOf(true)
+        coEvery { preferenceDataSource.getIsDownloadArea() } returns flowOf(true)
         useCase()
         coVerify(exactly = 0) { areaRepository.readAreaFromCsv() }
         coVerify(exactly = 0) {
@@ -43,7 +44,7 @@ class DownloadAreaByCsvUseCaseTest : BaseTest() {
                 englishName = any()
             )
         }
-        coVerify(exactly = 0) { preferenceDataStore.setIsDownloadArea(isDownload = any()) }
+        coVerify(exactly = 0) { preferenceDataSource.setIsDownloadArea(download = any()) }
     }
 
     @Test
@@ -65,7 +66,7 @@ class DownloadAreaByCsvUseCaseTest : BaseTest() {
             )
         )
 
-        coEvery { preferenceDataStore.isDownloadArea } returns flowOf(false)
+        coEvery { preferenceDataSource.getIsDownloadArea() } returns flowOf(false)
         coEvery { areaRepository.readAreaFromCsv() } returns mockData
         useCase()
 
@@ -82,7 +83,7 @@ class DownloadAreaByCsvUseCaseTest : BaseTest() {
             }
         }
 
-        coVerify { preferenceDataStore.setIsDownloadArea(true) }
+        coVerify { preferenceDataSource.setIsDownloadArea(true) }
 
     }
 }

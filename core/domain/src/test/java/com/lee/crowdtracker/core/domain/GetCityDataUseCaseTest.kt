@@ -6,6 +6,7 @@ import com.lee.crowdtracker.core.data.dto.ForecastPopulationDto
 import com.lee.crowdtracker.core.data.dto.ResultInfoDto
 import com.lee.crowdtracker.core.data.repository.SeoulCityDataRepository
 import com.lee.crowdtracker.core.domain.beach.model.CityDataModel
+import com.lee.crowdtracker.core.domain.beach.model.CongestionLevel
 import com.lee.crowdtracker.core.domain.beach.usecase.citydata.GetCityDataUseCase
 import com.lee.crowdtracker.library.test.base.BaseTest
 import com.lee.crowdtracker.library.test.utils.shouldBe
@@ -87,7 +88,7 @@ class GetCityDataUseCaseTest : BaseTest() {
             it shouldBe listOf(
                 CityDataModel(
                     name = "익선동",
-                    congestionLevel = "여유",
+                    congestionLevel = CongestionLevel.LOW,
                     congestionMessage = "사람이 몰려있을 가능성이 낮고 붐빔은 거의 느껴지지 않아요. 도보 이동이 자유로워요.",
                 )
             )

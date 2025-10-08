@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lee.crowdtracker.core.data.datasource.preference.PreferenceDataSource
 import com.lee.crowdtracker.core.domain.beach.usecase.area.DownloadAreaByCsvUseCase
 import com.lee.crowdtracker.library.base.exts.runSuspendCatching
 import com.lee.crowdtracker.libray.navermap.NaverMapSdkController
@@ -19,13 +20,14 @@ private const val TAG = "MainViewModel"
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    preferenceDataSource: PreferenceDataSource,
     private val downloadAreaByCsvUseCase: DownloadAreaByCsvUseCase,
     private val naverMapSdkController: NaverMapSdkController,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val isPermissionGranted = savedStateHandle.getStateFlow(PERMISSION_GRANTED, false)
-    private val isDownloadArea = savedStateHandle.getStateFlow(IS_DOWNLOAD_AREA, false)
+    private val isDownloadArea = preferenceDataSource.getIsDownloadArea()
     private val isInitMap = savedStateHandle.getStateFlow(INIT_MAP, false)
 
     val isInitialized: StateFlow<Boolean> = combine(
@@ -54,10 +56,9 @@ class MainViewModel @Inject constructor(
             runSuspendCatching {
                 downloadAreaByCsvUseCase()
             }.onSuccess {
-                Log.d("TAG", "downloadArea: success")
-                savedStateHandle[IS_DOWNLOAD_AREA] = true
+                Log.d(TAG, "downloadArea: success")
             }.onFailure {
-                Log.d("TAG", "downloadArea: fail", it)
+                Log.d(TAG, "downloadArea: fail", it)
             }
         }
     }

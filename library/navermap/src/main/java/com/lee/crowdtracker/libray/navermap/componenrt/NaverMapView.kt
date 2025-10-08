@@ -64,7 +64,6 @@ fun NaverMapView(
                 map.uiSettings.isLocationButtonEnabled = true
                 map.locationSource = locationSource
                 map.locationTrackingMode = LocationTrackingMode.Follow
-                map.locationOverlay.isVisible = true
                 onMapReady(map)
             }
             mapView
