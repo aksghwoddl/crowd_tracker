@@ -14,4 +14,6 @@ dependencies {
     implementation(project(":library:base"))
     implementation(project(":library:design"))
     implementation(project(":library:navermap"))
+
+    testImplementation(project(":library:test"))
 }
