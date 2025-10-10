@@ -42,8 +42,11 @@ android {
 
 dependencies {
     implementation(project((":root")))
+    implementation(platform(libs.compose.bom))
     implementation(libs.compose.runtime)
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+
+    androidTestImplementation(platform(libs.compose.bom))
 }
