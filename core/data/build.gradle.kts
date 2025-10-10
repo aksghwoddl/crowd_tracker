@@ -8,11 +8,6 @@ android {
 }
 
 dependencies {
-    // Test
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.espresso.core)
-
     // Retrofit
     implementation(libs.retrofit)
 
