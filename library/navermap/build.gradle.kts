@@ -19,4 +19,6 @@ dependencies {
     implementation(project(":library:base"))
     implementation(project(":library:design"))
     implementation(project(":core:domain"))
+
+    testImplementation(project(":library:test"))
 }
