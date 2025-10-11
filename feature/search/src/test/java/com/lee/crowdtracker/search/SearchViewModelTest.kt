@@ -13,7 +13,6 @@ import com.lee.crowdtracker.search.model.Area
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
@@ -37,8 +36,8 @@ class SearchViewModelTest : BaseTest() {
     }
 
     @Test
-    fun `검색어 입력 시 Success 상태 테스트`() = runTest {
-        val mockAreas = listOf(
+    fun `검색어 입력 시 상태 테스트`() = runTest {
+        val areaList = listOf(
             AreaModel(
                 no = 1,
                 name = "해운대",
@@ -46,9 +45,8 @@ class SearchViewModelTest : BaseTest() {
             )
         )
 
-        every { getAreaListByNameUseCase.invoke(any()) } returns flowOf(mockAreas)
+        every { getAreaListByNameUseCase(any()) } returns flowOf(areaList)
 
-        // then
         viewModel.searchUiState.test {
             awaitItem() shouldBe SearchUiState.Loading
             viewModel.onQueryChange("해")
@@ -65,7 +63,7 @@ class SearchViewModelTest : BaseTest() {
     }
 
     @Test
-    fun `지역을 선택시 혼잡도 정보 테스트`() = runTest {
+    fun `지역을 선택시 혼잡도 상태 테스트`() = runTest {
         val area = Area(
             no = 1,
             name = "해운대",
@@ -80,12 +78,20 @@ class SearchViewModelTest : BaseTest() {
             )
         )
 
-        every { getCityDataUseCase.invoke(area.name) } returns flowOf(cityDataModelList)
+        every { getCityDataUseCase(name = area.name) } returns flowOf(cityDataModelList)
 
-        // then
         viewModel.cityDataUiState.test {
-            awaitItem() shouldBe SearchUiState.Loading
+            awaitItem() shouldBe CityDataUiState.Loading
             viewModel.onAreaClick(area)
+
+            val item = awaitItem()
+
+            (item is CityDataUiState.Success) shouldBe true
+            if(item is CityDataUiState.Success) {
+                item.name shouldBe "해운대"
+                item.level shouldBe CongestionLevel.MODERATE
+                item.message shouldBe "보통"
+            }
             cancelAndIgnoreRemainingEvents()
         }
     }
