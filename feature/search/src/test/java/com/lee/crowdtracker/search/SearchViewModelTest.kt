@@ -84,13 +84,13 @@ class SearchViewModelTest : BaseTest() {
             awaitItem() shouldBe CityDataUiState.Loading
             viewModel.onAreaClick(area)
 
-            val item = awaitItem()
+            val state = awaitItem()
 
-            (item is CityDataUiState.Success) shouldBe true
-            if(item is CityDataUiState.Success) {
-                item.name shouldBe "해운대"
-                item.level shouldBe CongestionLevel.MODERATE
-                item.message shouldBe "보통"
+            (state is CityDataUiState.Success) shouldBe true
+            if(state is CityDataUiState.Success) {
+                state.name shouldBe "해운대"
+                state.level shouldBe CongestionLevel.MODERATE
+                state.message shouldBe "보통"
             }
             cancelAndIgnoreRemainingEvents()
         }
