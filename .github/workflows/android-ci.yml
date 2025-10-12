@@ -25,6 +25,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Configure local.properties
+        run: |
+          cat <<'EOF' > local.properties
+          naver-client-id=${{ secrets.NAVER_MAP_CLIENT_ID }}
+          seoul_openapi_key=${{ secrets.SEOUL_OPEN_API_KEY }}
+          EOF
+
       - name: Build, lint, and test
         run: ./gradlew lint testDebugUnitTest assembleDebug --stacktrace
 
