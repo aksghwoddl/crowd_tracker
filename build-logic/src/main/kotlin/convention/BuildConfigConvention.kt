@@ -23,12 +23,12 @@ fun Project.buildConfigConfiguration(
             buildConfigField(
                 "String",
                 "SEOUL_OPEN_API_KEY",
-                seoulOpenApiKey.toString()
+                "\"$seoulOpenApiKey\""
             )
             buildConfigField(
                 "String",
                 "NAVER_CLIENT_ID",
-                naverClientId.toString()
+                "\"$naverClientId\""
             )
         }
         getByName("debug") {
@@ -36,12 +36,12 @@ fun Project.buildConfigConfiguration(
             buildConfigField(
                 "String",
                 "SEOUL_OPEN_API_KEY",
-                seoulOpenApiKey.toString()
+                "\"$seoulOpenApiKey\""
             )
             buildConfigField(
                 "String",
                 "NAVER_CLIENT_ID",
-                naverClientId.toString()
+                "\"$naverClientId\""
             )
         }
     }
