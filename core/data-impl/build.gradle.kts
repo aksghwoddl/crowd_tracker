@@ -11,10 +11,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":library:base"))
 
-    // Test
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.espresso.core)
+    testImplementation(project(":library:test"))
 
     // Retrofit
     implementation(libs.retrofit)
