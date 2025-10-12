@@ -14,18 +14,21 @@ fun Project.buildConfigConfiguration(
         }
     }
 
+    val seoulOpenApiKey = properties.getProperty("seoul_openapi_key", "")
+    val naverClientId = properties.getProperty("naver-client-id", "")
+
     buildTypes {
         getByName("release") {
             buildConfigField("boolean", "APP_DEBUG", false.toString())
             buildConfigField(
                 "String",
                 "SEOUL_OPEN_API_KEY",
-                properties["seoul_openapi_key"].toString()
+                seoulOpenApiKey.toString()
             )
             buildConfigField(
                 "String",
                 "NAVER_CLIENT_ID",
-                properties["naver-client-id"].toString()
+                naverClientId.toString()
             )
         }
         getByName("debug") {
@@ -33,12 +36,12 @@ fun Project.buildConfigConfiguration(
             buildConfigField(
                 "String",
                 "SEOUL_OPEN_API_KEY",
-                properties["seoul_openapi_key"].toString()
+                seoulOpenApiKey.toString()
             )
             buildConfigField(
                 "String",
                 "NAVER_CLIENT_ID",
-                properties["naver-client-id"].toString()
+                naverClientId.toString()
             )
         }
     }
