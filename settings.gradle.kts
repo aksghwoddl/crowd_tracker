@@ -21,7 +21,6 @@ rootProject.name = "CrowdTracker"
 include(":app")
 include(":core")
 include(":library")
-include(":library:design-system")
 include(":library:design")
 include(":core:data")
 include(":core:data-impl")
